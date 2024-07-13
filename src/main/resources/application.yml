@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: utf-8
+      enabled: true
+
+spring:
+  profiles:
+    include: oauth
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+logging:
+  level:
+    org.hibernate.SQL : debug
+    org.hibernate.orm.jdbc.bind: trace
