@@ -8,15 +8,5 @@ server:
 
 spring:
   profiles:
+    active: local
     include: oauth
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-logging:
-  level:
-    org.hibernate.SQL : debug
-    org.hibernate.orm.jdbc.bind: trace
