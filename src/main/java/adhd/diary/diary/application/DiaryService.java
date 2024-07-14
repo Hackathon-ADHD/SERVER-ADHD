@@ -25,4 +25,8 @@ public class DiaryService {
         return new DiaryResponse(diary);
     }
 
+    public void deleteById(Long id) {
+        diaryRepository.deleteById(id);
+    }
+
 }
