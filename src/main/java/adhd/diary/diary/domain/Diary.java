@@ -32,6 +32,14 @@ public class Diary extends BaseTimeEntity {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setEmotion(Emotion emotion) {
+        this.emotion = emotion;
+    }
+
     public Emotion getEmotion() {
         return emotion;
     }

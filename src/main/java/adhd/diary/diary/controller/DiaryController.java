@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,7 +23,7 @@ public class DiaryController {
     }
 
     @PostMapping("/diary")
-    public ResponseEntity<DiaryResponse> save(DiaryRequest request) {
+    public ResponseEntity<DiaryResponse> create(@RequestBody DiaryRequest request) {
         DiaryResponse diaryResponse = diaryService.save(request);
         return ResponseEntity.created(URI.create("/diary")).body(diaryResponse);
     }
@@ -36,6 +38,12 @@ public class DiaryController {
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         diaryService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/diary/{id}")
+    public ResponseEntity<DiaryResponse> update(@PathVariable Long id, @RequestBody DiaryRequest request) {
+        DiaryResponse diaryResponse = diaryService.updateById(id, request);
+        return ResponseEntity.ok(diaryResponse);
     }
 
 }

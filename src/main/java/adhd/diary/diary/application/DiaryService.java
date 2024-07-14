@@ -21,12 +21,24 @@ public class DiaryService {
     }
 
     public DiaryResponse findById(Long id) {
-        Diary diary = diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
         return new DiaryResponse(diary);
     }
 
     public void deleteById(Long id) {
         diaryRepository.deleteById(id);
+    }
+
+    public DiaryResponse updateById(Long id, DiaryRequest request) {
+        Diary existingDiary = diaryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+        existingDiary.setContent(request.content());
+        existingDiary.setEmotion(request.emotion());
+
+        Diary diary = diaryRepository.save(existingDiary);
+
+        return new DiaryResponse(diary);
     }
 
 }
