@@ -20,4 +20,9 @@ public class DiaryService {
         return new DiaryResponse(diary);
     }
 
+    public DiaryResponse findById(Long id) {
+        Diary diary = diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+        return new DiaryResponse(diary);
+    }
+
 }
