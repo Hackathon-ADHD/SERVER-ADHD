@@ -1,0 +1,3 @@
+[submodule "server-submodule"]
+	path = server-submodule
+	url = https://github.com/Hackathon-ADHD/server-submodule.git
