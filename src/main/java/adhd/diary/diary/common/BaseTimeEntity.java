@@ -1,4 +1,4 @@
-package adhd.diary.diary.domain;
+package adhd.diary.diary.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
