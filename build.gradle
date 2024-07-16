@@ -57,3 +57,6 @@ tasks.register('copySecret', Copy) {
 	into './src/main/resources'  // 복사 위치
 }
 
+tasks.named("jar") {
+	enabled = false;
+}
