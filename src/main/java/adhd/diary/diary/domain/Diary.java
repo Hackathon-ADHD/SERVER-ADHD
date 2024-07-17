@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Diary extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,8 +17,7 @@ public class Diary extends BaseTimeEntity {
     private String content;
     private Emotion emotion;
 
-    public Diary(String content,
-                 Emotion emotion){
+    public Diary(String content, Emotion emotion){
         this.content = content;
         this.emotion = emotion;
     }
