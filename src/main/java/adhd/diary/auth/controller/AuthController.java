@@ -10,6 +10,7 @@ public class AuthController {
     public String redirectNicknameForm() {
         return "redirect:/signup/nickname";
     }
+
     @GetMapping("/signup/nickname")
     public String showNicknameForm() {
         return "nickname";
@@ -17,8 +18,6 @@ public class AuthController {
 
     @GetMapping("/signup/birthday")
     public String saveBirthday() {
-
         return "birthday";
     }
-
 }
