@@ -1,11 +1,8 @@
 package adhd.diary.diary.domain;
 
 import adhd.diary.diary.common.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import adhd.diary.member.domain.Member;
+import jakarta.persistence.*;
 
 @Entity
 public class Diary extends BaseTimeEntity {
@@ -16,6 +13,10 @@ public class Diary extends BaseTimeEntity {
     @Column(length = 1000)
     private String content;
     private Emotion emotion;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     public Diary(String content,
                  Emotion emotion){
