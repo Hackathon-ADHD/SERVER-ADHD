@@ -5,7 +5,6 @@ import adhd.diary.auth.OAuthAttributes;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import adhd.diary.member.domain.SocialProvider;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-
-import static adhd.diary.member.domain.SocialProvider.GOOGLE;
 
 @Service
 @Transactional

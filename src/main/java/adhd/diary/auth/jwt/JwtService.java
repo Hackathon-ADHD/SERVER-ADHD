@@ -14,12 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class JwtService {

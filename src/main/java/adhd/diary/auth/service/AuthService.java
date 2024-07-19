@@ -1,19 +1,13 @@
 package adhd.diary.auth.service;
 
-import adhd.diary.auth.dto.SocialLoginRequest;
-import adhd.diary.auth.dto.TokenResponse;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
-import adhd.diary.member.domain.Role;
 import adhd.diary.member.dto.CompleteRegistrationRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class AuthService {
