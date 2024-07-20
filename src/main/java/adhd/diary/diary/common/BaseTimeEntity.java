@@ -1,4 +1,4 @@
-package adhd.diary.diary.domain;
+package adhd.diary.diary.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity {
-
     @CreatedDate
     private LocalDateTime createdDate;
 

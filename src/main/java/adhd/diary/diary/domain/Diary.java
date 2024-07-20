@@ -1,14 +1,11 @@
 package adhd.diary.diary.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import adhd.diary.diary.common.BaseTimeEntity;
+import adhd.diary.member.domain.Member;
+import jakarta.persistence.*;
 
 @Entity
 public class Diary extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,7 +14,12 @@ public class Diary extends BaseTimeEntity {
     private String content;
     private Emotion emotion;
 
-    public Diary(String content, Emotion emotion){
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public Diary(String content,
+                 Emotion emotion){
         this.content = content;
         this.emotion = emotion;
     }
