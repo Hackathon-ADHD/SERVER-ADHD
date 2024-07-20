@@ -27,7 +27,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-
         String accessToken = jwtService.extractAccessToken(request).orElse(null);
         String refreshToken = jwtService.extractRefreshToken(request).orElse(null);
 
