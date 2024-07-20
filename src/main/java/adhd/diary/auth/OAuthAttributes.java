@@ -59,7 +59,9 @@ public class OAuthAttributes {
                 '}';
     }
 
-    public static OAuthAttributes of(SocialProvider socialProvider, String userNameAttributeName, Map<String, Object> attributes) {
+    public static OAuthAttributes of(SocialProvider socialProvider,
+                                     String userNameAttributeName,
+                                     Map<String, Object> attributes) {
 
         if (socialProvider == SocialProvider.KAKAO) {
             return ofKakao(userNameAttributeName, attributes);
@@ -101,6 +103,5 @@ public class OAuthAttributes {
                 .role(Role.USER)
                 .socialProvider(socialProvider)
                 .build();
-
     }
 }

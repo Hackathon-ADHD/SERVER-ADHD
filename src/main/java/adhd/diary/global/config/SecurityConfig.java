@@ -27,7 +27,11 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(JwtService jwtService, MemberRepository memberRepository, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler, OAuth2LoginFailureHandler oAuth2LoginFailureHandler, CustomOAuth2UserService customOAuth2UserService) {
+    public SecurityConfig(JwtService jwtService,
+                          MemberRepository memberRepository,
+                          OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                          OAuth2LoginFailureHandler oAuth2LoginFailureHandler,
+                          CustomOAuth2UserService customOAuth2UserService) {
         this.jwtService = jwtService;
         this.memberRepository = memberRepository;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;

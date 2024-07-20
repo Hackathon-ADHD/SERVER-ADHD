@@ -14,8 +14,10 @@ public class CustomOAuth2User extends DefaultOAuth2User {
     private Role role;
 
     public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities,
-                            Map<String, Object> attributes, String nameAttributeKey,
-                            String email, Role role, String socialId) {
+                            Map<String, Object> attributes,
+                            String nameAttributeKey,
+                            String email, Role role,
+                            String socialId) {
         super(authorities, attributes, nameAttributeKey);
         this.socialId = socialId;
         this.email = email;

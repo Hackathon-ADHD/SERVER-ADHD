@@ -13,7 +13,10 @@ import java.io.IOException;
 public class OAuth2LoginFailureHandler implements AuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception)
+            throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.getWriter().write("소셜로그인 실패. 서버 로그를 확인해주세요.");
     }

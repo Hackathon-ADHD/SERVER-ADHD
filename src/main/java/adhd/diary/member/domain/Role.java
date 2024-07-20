@@ -20,6 +20,4 @@ public enum Role {
     public String getTitle() {
         return title;
     }
-
-
 }
