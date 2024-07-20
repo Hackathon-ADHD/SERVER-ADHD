@@ -40,7 +40,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         SocialProvider socialProvider = getSocialProvider(registrationId);
-        String userNameAttributeName = userRequest.getClientRegistration()
+        String userNameAttributeName = userRequest
+                .getClientRegistration()
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();

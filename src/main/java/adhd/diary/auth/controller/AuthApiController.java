@@ -20,7 +20,7 @@ public class AuthApiController {
     @PostMapping("/complete-registration")
     public ResponseEntity<?> completeRegistration (@RequestBody CompleteRegistrationRequest completeRegistrationRequest, Principal principal) {
 
-          memberService.completeRegistration(completeRegistrationRequest, principal.getName());
+        memberService.completeRegistration(completeRegistrationRequest, principal.getName());
 
         return ResponseEntity.ok().build();
     }

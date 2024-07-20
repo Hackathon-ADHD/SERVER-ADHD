@@ -8,7 +8,9 @@ public class SocialLoginRequest {
     private String socialId;
     private SocialProvider socialProvider;
 
-    public SocialLoginRequest(String email, String socialId, SocialProvider socialProvider) {
+    public SocialLoginRequest(String email,
+                              String socialId,
+                              SocialProvider socialProvider) {
         this.email = email;
         this.socialId = socialId;
         this.socialProvider = socialProvider;
