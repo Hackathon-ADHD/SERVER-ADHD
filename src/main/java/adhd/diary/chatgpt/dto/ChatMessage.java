@@ -2,7 +2,7 @@ package adhd.diary.chatgpt.dto;
 
 public class ChatMessage {
 
-    private String role = "user";
+    private String role;
     private String content;
 
     public ChatMessage(String role, String content) {
@@ -29,13 +29,5 @@ public class ChatMessage {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatMessage{" +
-                "role='" + role + '\'' +
-                ", content='" + content + '\'' +
-                '}';
     }
 }
