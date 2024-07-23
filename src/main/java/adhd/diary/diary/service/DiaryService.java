@@ -1,4 +1,4 @@
-package adhd.diary.diary.application;
+package adhd.diary.diary.service;
 
 import adhd.diary.diary.domain.Diary;
 import adhd.diary.diary.domain.DiaryRepository;
@@ -40,5 +40,4 @@ public class DiaryService {
 
         return new DiaryResponse(diary);
     }
-
 }
