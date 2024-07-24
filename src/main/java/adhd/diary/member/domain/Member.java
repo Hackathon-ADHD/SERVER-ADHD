@@ -1,6 +1,6 @@
 package adhd.diary.member.domain;
 
-import adhd.diary.diary.common.BaseTimeEntity;
+import adhd.diary.common.BaseTimeEntity;
 import adhd.diary.diary.domain.Diary;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
