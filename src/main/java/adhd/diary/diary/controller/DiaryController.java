@@ -4,16 +4,13 @@ import adhd.diary.diary.service.DiaryService;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryResponse;
 import java.net.URI;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class DiaryController {
 
     private final DiaryService diaryService;
@@ -32,6 +29,12 @@ public class DiaryController {
     public ResponseEntity<DiaryResponse> diary(@PathVariable Long id) {
         DiaryResponse diaryResponse = diaryService.findById(id);
         return ResponseEntity.ok(diaryResponse);
+    }
+
+    @GetMapping("/diarys")
+    public ResponseEntity<List<DiaryResponse>> diaryAll() {
+        List<DiaryResponse> diaryResponses = diaryService.findAll();
+        return ResponseEntity.ok().body(diaryResponses);
     }
 
     @DeleteMapping("/diary/{id}")

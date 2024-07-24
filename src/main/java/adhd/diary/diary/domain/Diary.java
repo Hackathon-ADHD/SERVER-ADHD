@@ -13,6 +13,7 @@ public class Diary extends BaseTimeEntity {
     @Column(length = 1000)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     private Emotion emotion;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -34,6 +35,10 @@ public class Diary extends BaseTimeEntity {
         return content;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -44,5 +49,9 @@ public class Diary extends BaseTimeEntity {
 
     public Emotion getEmotion() {
         return emotion;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }
