@@ -1,4 +1,4 @@
-package adhd.diary.auth.dto;
+package adhd.diary.auth.dto.response;
 
 public class TokenResponse {
 

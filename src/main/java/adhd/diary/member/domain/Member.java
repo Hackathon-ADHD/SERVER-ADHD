@@ -63,6 +63,22 @@ public class Member extends BaseTimeEntity {
         return socialId;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public SocialProvider getSocialProvider() {
+        return socialProvider;
+    }
+
+    public LocalDate getBirthDay() {
+        return birthDay;
+    }
+
+    public List<Diary> getDiaryList() {
+        return diaryList;
+    }
+
     public String getRefreshToken() {
         return refreshToken;
     }
