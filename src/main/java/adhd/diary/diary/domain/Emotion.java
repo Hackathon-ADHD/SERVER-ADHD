@@ -24,5 +24,4 @@ public enum Emotion {
     public String getType() {
         return type;
     }
-
 }

@@ -12,14 +12,14 @@ public class Diary extends BaseTimeEntity {
 
     @Column(length = 1000)
     private String content;
+
     private Emotion emotion;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Diary(String content,
-                 Emotion emotion){
+    public Diary(String content, Emotion emotion){
         this.content = content;
         this.emotion = emotion;
     }
@@ -45,5 +45,4 @@ public class Diary extends BaseTimeEntity {
     public Emotion getEmotion() {
         return emotion;
     }
-
 }
