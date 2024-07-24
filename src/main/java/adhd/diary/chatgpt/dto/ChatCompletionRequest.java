@@ -12,8 +12,8 @@ public class ChatCompletionRequest {
     private List<ChatMessage> messages;
 
     @JsonProperty("max_tokens")
-//    @Value("${chatgpt.max-tokens}")
-    private Integer maxTokens = 1000;
+    @Value("${chatgpt.max-tokens}")
+    private Integer maxTokens;
 
     public ChatCompletionRequest(List<ChatMessage> messages) {
         this.messages = messages;
