@@ -1,4 +1,4 @@
-package adhd.diary.diary.controller;
+package adhd.diary.auth.controller;
 
 import adhd.diary.auth.dto.response.TokenResponse;
 import adhd.diary.auth.jwt.JwtService;
