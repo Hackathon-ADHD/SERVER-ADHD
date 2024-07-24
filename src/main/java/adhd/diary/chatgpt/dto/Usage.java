@@ -5,13 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Usage {
 
     @JsonProperty("prompt_tokens")
-    long promptTokens;
+    private long promptTokens;
 
     @JsonProperty("completion_tokens")
-    long completionTokens;
+    private long completionTokens;
 
     @JsonProperty("total_tokens")
-    long totalTokens;
+    private long totalTokens;
+
+    public Usage() {
+    }
 
     public Usage(long promptTokens,
                  long completionTokens,

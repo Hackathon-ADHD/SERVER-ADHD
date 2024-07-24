@@ -1,6 +1,7 @@
 package adhd.diary.chatgpt.util;
 
 import adhd.diary.chatgpt.dto.ChatCompletionRequest;
+import adhd.diary.chatgpt.dto.ChatCompletionResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
@@ -22,14 +23,7 @@ public class ChatGptUtil {
     private String API_KEY;
 
     public CompletableFuture<String> createChatCompletion(ChatCompletionRequest requestBody, String API_URL) {
-        String jsonBody = null;
-        try {
-            jsonBody = mapper.writeValueAsString(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println(jsonBody);
+        String jsonBody = jsonParsing(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_BASE_URL + API_URL))
@@ -40,6 +34,34 @@ public class ChatGptUtil {
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
+                .thenCompose(this::extractChatCompletionResponse)
                 .exceptionally(e -> "Error: " + e.getMessage());
+    }
+
+    public String jsonParsing(ChatCompletionRequest request) {
+        try {
+            return mapper.writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Json 변환 실패");
+        }
+    }
+
+    public CompletableFuture<String> extractChatCompletionResponse(String response) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return extractAnswer(mapper.readValue(response, ChatCompletionResponse.class));
+            } catch (Exception e) {
+                System.err.println("Failed to parse JSON: " + e.getMessage());
+                return null;
+            }
+        });
+    }
+
+    public String extractAnswer(ChatCompletionResponse response) {
+        try {
+            return mapper.writeValueAsString(response.choices().get(0).getMessage().getContent());
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to parse JSON: " + e.getMessage());
+        }
     }
 }
