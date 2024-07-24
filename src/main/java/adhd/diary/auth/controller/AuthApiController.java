@@ -2,6 +2,9 @@ package adhd.diary.auth.controller;
 
 import adhd.diary.auth.service.AuthService;
 import adhd.diary.member.dto.CompleteRegistrationRequest;
+import adhd.diary.member.dto.MemberResponse;
+import adhd.diary.response.ApiResponse;
+import adhd.diary.response.ResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +21,10 @@ public class AuthApiController {
     }
 
     @PostMapping("/complete-registration")
-    public ResponseEntity<?> completeRegistration (@RequestBody CompleteRegistrationRequest completeRegistrationRequest, Principal principal) {
+    public ApiResponse<?> completeRegistration (@RequestBody CompleteRegistrationRequest completeRegistrationRequest, Principal principal) {
 
-        memberService.completeRegistration(completeRegistrationRequest, principal.getName());
+        MemberResponse memberResponse = memberService.completeRegistration(completeRegistrationRequest, principal.getName());
 
-        return ResponseEntity.ok().build();
+        return ApiResponse.success(ResponseCode.USER_CREATE_SUCCESS, memberResponse);
     }
 }

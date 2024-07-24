@@ -4,6 +4,9 @@ import adhd.diary.diary.service.DiaryService;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryResponse;
 import java.net.URI;
+
+import adhd.diary.response.ApiResponse;
+import adhd.diary.response.ResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,26 +26,26 @@ public class DiaryController {
     }
 
     @PostMapping("/diary")
-    public ResponseEntity<DiaryResponse> create(@RequestBody DiaryRequest request) {
+    public ApiResponse<DiaryResponse> create(@RequestBody DiaryRequest request) {
         DiaryResponse diaryResponse = diaryService.save(request);
-        return ResponseEntity.created(URI.create("/diary")).body(diaryResponse);
+        return ApiResponse.success(ResponseCode.DIARY_CREATE_SUCCESS, diaryResponse);
     }
 
     @GetMapping("/diary/{id}")
-    public ResponseEntity<DiaryResponse> diary(@PathVariable Long id) {
+    public ApiResponse<DiaryResponse> diary(@PathVariable Long id) {
         DiaryResponse diaryResponse = diaryService.findById(id);
-        return ResponseEntity.ok(diaryResponse);
+        return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryResponse);
     }
 
     @DeleteMapping("/diary/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
+    public ApiResponse<Void> remove(@PathVariable Long id) {
         diaryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.success(ResponseCode.DIARY_DELETE_SUCCESS);
     }
 
     @PutMapping("/diary/{id}")
-    public ResponseEntity<DiaryResponse> update(@PathVariable Long id, @RequestBody DiaryRequest request) {
+    public ApiResponse<DiaryResponse> update(@PathVariable Long id, @RequestBody DiaryRequest request) {
         DiaryResponse diaryResponse = diaryService.updateById(id, request);
-        return ResponseEntity.ok(diaryResponse);
+        return ApiResponse.success(ResponseCode.DIARY_UPDATE_SUCCESS);
     }
 }
