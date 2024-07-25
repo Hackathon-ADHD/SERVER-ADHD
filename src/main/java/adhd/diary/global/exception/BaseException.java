@@ -1,4 +1,4 @@
-package adhd.diary.exception;
+package adhd.diary.global.exception;
 
 import adhd.diary.response.ResponseCode;
 
