@@ -4,8 +4,12 @@ import adhd.diary.diary.domain.Diary;
 import adhd.diary.diary.domain.DiaryRepository;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryResponse;
+import adhd.diary.diary.exception.DiaryForbiddenException;
+import adhd.diary.diary.exception.DiaryNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
+import adhd.diary.member.exception.MemberNotFoundException;
+import adhd.diary.response.ResponseCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,7 +33,8 @@ public class DiaryService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("회원이 없습니다."));
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
 
         Diary diary = request.toEntity();
         diary.setMember(member);
@@ -47,7 +52,7 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public DiaryResponse findById(Long id) {
         Diary diary = diaryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(diary);
         return new DiaryResponse(diary);
     }
@@ -55,7 +60,7 @@ public class DiaryService {
     @Transactional
     public void deleteById(Long id) {
         Diary diary = diaryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(diary);
 
         diaryRepository.deleteById(id);
@@ -64,7 +69,7 @@ public class DiaryService {
     @Transactional
     public DiaryResponse updateById(Long id, DiaryRequest request) {
         Diary existingDiary = diaryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일기장 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(existingDiary);
 
         existingDiary.setContent(request.content());
@@ -80,7 +85,7 @@ public class DiaryService {
         String email = authentication.getName();
 
         if(!diary.getMember().getEmail().equals(email)){
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new DiaryForbiddenException(ResponseCode.DIARY_FORBIDDEN);
         }
     }
 }

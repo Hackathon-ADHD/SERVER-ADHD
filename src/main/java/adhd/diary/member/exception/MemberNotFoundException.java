@@ -3,9 +3,9 @@ package adhd.diary.member.exception;
 import adhd.diary.global.exception.BaseException;
 import adhd.diary.response.ResponseCode;
 
-public class MemberException extends BaseException {
+public class MemberNotFoundException extends BaseException {
 
-    public MemberException(ResponseCode responseCode) {
+    public MemberNotFoundException(ResponseCode responseCode) {
         super(responseCode);
     }
 }
