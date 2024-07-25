@@ -36,7 +36,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         } else if (refreshToken != null) {
             memberRepository.findByRefreshToken(refreshToken).ifPresent(member -> {
                 String newAccessToken = jwtService.createAccessToken(member.getEmail());
-                jwtService.sendAccessToken(response, newAccessToken);
+                String newRefreshToken = jwtService.createRefreshToken(member.getEmail());
+                jwtService.sendAccessAndRefreshToken(response, newAccessToken, newRefreshToken);
                 Authentication authentication = jwtService.getAuthentication(newAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             });

@@ -1,4 +1,4 @@
-package adhd.diary.member.dto;
+package adhd.diary.member.dto.request;
 
 import java.time.LocalDate;
 

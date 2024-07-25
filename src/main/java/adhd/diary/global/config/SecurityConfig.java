@@ -56,12 +56,12 @@ public class SecurityConfig {
                 ))
                 .authorizeHttpRequests(authorizationRequest ->
                         authorizationRequest.requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/templates/**"),
                                 AntPathRequestMatcher.antMatcher("/login")
                         ).permitAll()
                 ).authorizeHttpRequests(authorizationRequest ->
                         authorizationRequest.requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/login/oauth2/code/signup"),
+                                AntPathRequestMatcher.antMatcher("/api/update-nickname"),
                                 AntPathRequestMatcher.antMatcher("/signup/nickname"),
                                 AntPathRequestMatcher.antMatcher("/signup/birthday"),
                                 AntPathRequestMatcher.antMatcher("/login/complete-registration"),

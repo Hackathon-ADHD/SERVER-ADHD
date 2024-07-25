@@ -1,5 +1,6 @@
 package adhd.diary.auth.jwt;
 
+import adhd.diary.auth.dto.response.TokenResponse;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import com.auth0.jwt.JWT;
@@ -34,7 +35,7 @@ public class JwtService {
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
     private static final String AUTHORIZATION = "Authorization";
-    private static final String AUTHORIZATIONREFRESHTOKEN= "Authorization-refreshToken";
+    private static final String AUTHORIZATION_REFRESH_TOKEN = "refreshToken";
 
     private static final String BEARER = "Bearer ";
 
@@ -46,7 +47,6 @@ public class JwtService {
 
     public String createAccessToken(String email) {
         long now = (new Date()).getTime();
-
         Date accessTokenExpiresIn = new Date(now + accessTokenExpirationPeriod);
 
         return JWT.create()
@@ -56,13 +56,14 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String createRefreshToken() {
+    public String createRefreshToken(String email) {
         long now = (new Date()).getTime();
         Date refreshTokenExpiresIn = new Date(now + refreshTokenExpirationPeriod);
 
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(refreshTokenExpiresIn)
+                .withClaim(EMAIL_CLAIM, email)
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -80,7 +81,7 @@ public class JwtService {
     }
 
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(AUTHORIZATIONREFRESHTOKEN))
+        return Optional.ofNullable(request.getHeader(AUTHORIZATION_REFRESH_TOKEN))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
@@ -108,7 +109,7 @@ public class JwtService {
     }
 
     public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(AUTHORIZATIONREFRESHTOKEN, BEARER + refreshToken);
+        response.setHeader(AUTHORIZATION_REFRESH_TOKEN, BEARER + refreshToken);
     }
 
     public void updateRefreshToken(String email, String refreshToken) {
@@ -150,5 +151,47 @@ public class JwtService {
                 .build();
 
         return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
+    }
+
+    public String getTokenType(String token) {
+        try {
+            var verifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
+            var decodedJWT = verifier.verify(token);
+            String subject = decodedJWT.getSubject();
+
+            if (ACCESS_TOKEN_SUBJECT.equals(subject)) {
+                return "AccessToken";
+            } else if (REFRESH_TOKEN_SUBJECT.equals(subject)) {
+                return "RefreshToken";
+            } else {
+                throw new IllegalArgumentException("알 수 없는 토큰 유형입니다.");
+            }
+        } catch (JWTVerificationException e) {
+            throw new IllegalArgumentException("토큰 검증에 실패했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("예상치 못한 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+    }
+
+    public TokenResponse refreshTokens(String refreshToken) {
+        System.out.println("Received refreshToken: " + refreshToken);
+
+        if (!isTokenValid(refreshToken)) {
+            System.err.println("Invalid refreshToken");
+            throw new IllegalArgumentException("유효하지 않은 refresh token입니다.");
+        }
+
+        String email = extractEmail(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 refresh token입니다."));
+        System.out.println("Extracted email: " + email);
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        String newAccessToken = createAccessToken(email);
+        String newRefreshToken = createRefreshToken(email);
+        updateRefreshToken(email, newRefreshToken);
+
+        return new TokenResponse(newAccessToken, newRefreshToken);
     }
 }

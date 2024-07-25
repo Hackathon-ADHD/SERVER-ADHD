@@ -1,6 +1,6 @@
 package adhd.diary.member.domain;
 
-import adhd.diary.diary.common.BaseTimeEntity;
+import adhd.diary.common.BaseTimeEntity;
 import adhd.diary.diary.domain.Diary;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -63,10 +63,6 @@ public class Member extends BaseTimeEntity {
         return socialId;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -81,6 +77,10 @@ public class Member extends BaseTimeEntity {
 
     public List<Diary> getDiaryList() {
         return diaryList;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     public static class Builder {
