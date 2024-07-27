@@ -20,20 +20,21 @@ public enum ResponseCode {
      * user response
      */
     //404 Not Found
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다,"),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다,"),
 
     //200 OK
-    USER_READ_SUCCESS(HttpStatus.OK, "사용자 정보 조회 성공"),
-    USER_LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
+    MEMBER_READ_SUCCESS(HttpStatus.OK, "사용자 정보 조회 성공"),
+    MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 
     //201 Created
-    USER_CREATE_SUCCESS(HttpStatus.CREATED, "회원가입 성공"),
+    MEMBER_CREATE_SUCCESS(HttpStatus.CREATED, "회원가입 성공"),
 
     /**
      * diary response
      */
     //404 Not Found
-    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "일기를 찾을 수 없습니다,"),
+    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "일기를 찾을 수 없습니다."),
+    DIARY_FORBIDDEN(HttpStatus.FORBIDDEN, "일기장에 접근할 권한이 없습니다."),
 
     //200 OK
     DIARY_READ_ALL_SUCCESS(HttpStatus.OK, "일기 전체 조회 성공"),
@@ -47,7 +48,9 @@ public enum ResponseCode {
     private HttpStatus httpStatus;
     private String message;
 
-    ResponseCode(HttpStatus httpStatus, String s) {
+    ResponseCode(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
+        this.message = message;
     }
 
     public HttpStatus getHttpStatus() {
