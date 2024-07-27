@@ -29,4 +29,12 @@ public class ApiResponse <T> {
     public static <T> ApiResponse<T> fail(ResponseCode responseCode, String message) {
         return new ApiResponse<T>(new ApiHeader(responseCode.getHttpStatus(), responseCode.getMessage()), new ApiBody(message));
     }
+
+    public ApiHeader getHeader() {
+        return header;
+    }
+
+    public ApiBody<T> getBody() {
+        return body;
+    }
 }
