@@ -25,6 +25,8 @@ public enum ResponseCode {
     //200 OK
     MEMBER_READ_SUCCESS(HttpStatus.OK, "사용자 정보 조회 성공"),
     MEMBER_LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
+    NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "닉네임 수정 성공"),
+
 
     //201 Created
     MEMBER_CREATE_SUCCESS(HttpStatus.CREATED, "회원가입 성공"),
