@@ -10,6 +10,16 @@ public class KakaoTokenResponse {
     private int refresh_token_expires_in;
     private String scope;
 
+    public KakaoTokenResponse(String access_token, String token_type, String refresh_token, String id_token, int expires_in, int refresh_token_expires_in, String scope) {
+        this.access_token = access_token;
+        this.token_type = token_type;
+        this.refresh_token = refresh_token;
+        this.id_token = id_token;
+        this.expires_in = expires_in;
+        this.refresh_token_expires_in = refresh_token_expires_in;
+        this.scope = scope;
+    }
+
     public String getAccess_token() {
         return access_token;
     }

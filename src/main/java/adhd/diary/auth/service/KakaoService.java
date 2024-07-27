@@ -2,7 +2,7 @@ package adhd.diary.auth.service;
 
 import adhd.diary.auth.dto.request.MemberKakaoSignupRequest;
 import adhd.diary.auth.dto.response.KakaoTokenResponse;
-import adhd.diary.auth.dto.response.MemberKakaoLoginResponse;
+import adhd.diary.auth.dto.response.SocialLoginResponse;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.auth.userinfo.KakaoOAuth2UserInfo;
@@ -17,10 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -73,20 +70,22 @@ public class KakaoService {
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
         ResponseEntity<String> accessTokenResponse = restTemplate.exchange(
-            KAKAO_TOKEN_URI,
-            HttpMethod.POST,
-            kakaoTokenRequest,
-            String.class
+                KAKAO_TOKEN_URI,
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
         );
+        if (accessTokenResponse.getStatusCode() == HttpStatus.OK) {
+            ObjectMapper objectMapper = new ObjectMapper();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            KakaoTokenResponse kakaoTokenResponse = objectMapper.readValue(accessTokenResponse.getBody(), KakaoTokenResponse.class);
-            return kakaoTokenResponse.getAccess_token();
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("카카오 액세스 토큰을 가져오는데 실패했습니다.", e);
+            try {
+                KakaoTokenResponse kakaoTokenResponse = objectMapper.readValue(accessTokenResponse.getBody(), KakaoTokenResponse.class);
+                return kakaoTokenResponse.getAccess_token();
+            } catch (JsonProcessingException e) {
+                throw new IllegalArgumentException("카카오 액세스 토큰을 가져오는데 실패했습니다.", e);
+            }
         }
+        return null;
     }
 
     public OAuth2UserInfo getUserKakaoInfo(String accessToken) {
@@ -115,7 +114,7 @@ public class KakaoService {
     }
 
     @Transactional
-    public MemberKakaoLoginResponse kakaoLogin(String accessToken) {
+    public SocialLoginResponse kakaoLogin(String accessToken) {
         OAuth2UserInfo userInfo = getUserKakaoInfo(accessToken);
         MemberLoginResponse memberResponse = findBySocialId(userInfo.getId());
 
@@ -129,7 +128,7 @@ public class KakaoService {
 
         jwtService.updateRefreshToken(memberResponse.getEmail(), jwtRefreshToken);
 
-        return new MemberKakaoLoginResponse(jwtAccessToken, jwtRefreshToken, memberResponse.getEmail());
+        return new SocialLoginResponse(jwtAccessToken, jwtRefreshToken, memberResponse.getEmail());
     }
 
     @Transactional
