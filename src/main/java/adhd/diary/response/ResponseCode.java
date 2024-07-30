@@ -49,8 +49,13 @@ public enum ResponseCode {
     DIARY_CREATE_SUCCESS(HttpStatus.CREATED, "일기 생성 성공"),
 
     // JWT Token errors
-    JWT_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "자체 JWT 토큰이 만료되었습니다."),
+    JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "자체 JWT ACCESS 토큰이 만료되었습니다."),
+    JWT_REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "자체 JWT REFRESH 토큰이 만료되었습니다."),
+
     JWT_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "자체 JWT 토큰 가져오기에 실패하였습니다."),
+    UNKNOWN_TOKEN_TYPE(HttpStatus.BAD_REQUEST, "알 수 없는 토큰 유형입니다."),
+    TOKEN_VALIDATION_FAILED(HttpStatus.UNAUTHORIZED, "토큰 검증에 실패했습니다."),
+    UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     // OAuth2 Token retrieval errors
     KAKAO_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "카카오 토큰 가져오기에 실패하였습니다."),

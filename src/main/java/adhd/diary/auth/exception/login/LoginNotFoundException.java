@@ -1,4 +1,4 @@
-package adhd.diary.auth.exception;
+package adhd.diary.auth.exception.login;
 
 import adhd.diary.global.exception.BaseException;
 import adhd.diary.response.ResponseCode;

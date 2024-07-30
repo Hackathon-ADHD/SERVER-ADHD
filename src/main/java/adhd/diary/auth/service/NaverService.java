@@ -3,7 +3,7 @@ package adhd.diary.auth.service;
 import adhd.diary.auth.dto.request.SocialLoginRequest;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
 import adhd.diary.auth.dto.response.SocialLoginResponse;
-import adhd.diary.auth.exception.LoginNotFoundException;
+import adhd.diary.auth.exception.login.LoginNotFoundException;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.auth.userinfo.NaverOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;

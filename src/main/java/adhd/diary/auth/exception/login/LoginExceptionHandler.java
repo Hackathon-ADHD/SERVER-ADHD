@@ -1,4 +1,4 @@
-package adhd.diary.auth.exception;
+package adhd.diary.auth.exception.login;
 
 import adhd.diary.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
