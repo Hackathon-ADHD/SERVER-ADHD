@@ -1,11 +1,11 @@
 package adhd.diary.auth.service;
 
 import adhd.diary.auth.dto.request.SocialLoginRequest;
-import adhd.diary.auth.dto.response.SocialLoginResponse;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
+import adhd.diary.auth.dto.response.SocialLoginResponse;
 import adhd.diary.auth.exception.login.LoginNotFoundException;
 import adhd.diary.auth.jwt.JwtService;
-import adhd.diary.auth.userinfo.KakaoOAuth2UserInfo;
+import adhd.diary.auth.userinfo.NaverOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
@@ -28,22 +28,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class KakaoService {
+public class NaverService {
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-    private String KAKAO_CLIENT_ID;
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    private String NAVER_CLIENT_ID;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String KAKAO_REDIRECT_URI;
+    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
+    private String NAVER_REDIRECT_URI;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
-    private String KAKAO_CLIENT_SECRET;
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String NAVER_CLIENT_SECRET;
 
-    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
-    private String KAKAO_TOKEN_URI;
+    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
+    private String NAVER_TOKEN_URI;
 
-    @Value(("${spring.security.oauth2.client.provider.kakao.user-info-uri}"))
-    private String KAKAO_USER_INFO_URI;
+    @Value(("${spring.security.oauth2.client.provider.naver.user-info-uri}"))
+    private String NAVER_USER_INFO_URI;
 
 
     @Autowired
@@ -53,7 +53,7 @@ public class KakaoService {
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
 
-    public KakaoService(MemberRepository memberRepository,
+    public NaverService(MemberRepository memberRepository,
                         JwtService jwtService,
                         ObjectMapper objectMapper) {
         this.memberRepository = memberRepository;
@@ -61,22 +61,22 @@ public class KakaoService {
         this.objectMapper = objectMapper;
     }
 
-    public String getKakaoAccessToken(String code) throws JsonProcessingException {
+    public String getNaverAccessToken(String code) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", KAKAO_CLIENT_ID);
-        params.add("redirect_uri", KAKAO_REDIRECT_URI);
+        params.add("client_id", NAVER_CLIENT_ID);
+        params.add("redirect_uri", NAVER_REDIRECT_URI);
         params.add("code", code);
-        params.add("client_secret", KAKAO_CLIENT_SECRET);
+        params.add("client_secret", NAVER_CLIENT_SECRET);
 
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, String>> naverTokenRequest = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.exchange(
-                KAKAO_TOKEN_URI,
+                NAVER_TOKEN_URI,
                 HttpMethod.POST,
-                kakaoTokenRequest,
+                naverTokenRequest,
                 String.class
         );
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -84,41 +84,41 @@ public class KakaoService {
                 JsonNode jsonNode = objectMapper.readTree(response.getBody());
                 return jsonNode.get("access_token").asText();
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.KAKAO_LOGIN_SUCCESS);
+                throw new LoginNotFoundException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.KAKAO_TOKEN_RETRIEVAL_FAILED);
+            throw new LoginNotFoundException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
         }
     }
 
-    public OAuth2UserInfo getUserKakaoInfo(String accessToken) {
+    public OAuth2UserInfo getUserNaverInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> naverUserInfoRequest = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
-                KAKAO_USER_INFO_URI,
+                NAVER_USER_INFO_URI,
                 HttpMethod.GET,
-                kakaoUserInfoRequest,
+                naverUserInfoRequest,
                 String.class
         );
 
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             try {
                 Map<String, Object> attributes = objectMapper.readValue(response.getBody(), HashMap.class);
-                return new KakaoOAuth2UserInfo(attributes);
+                return new NaverOAuth2UserInfo(attributes);
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
+                throw new LoginNotFoundException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
+            throw new LoginNotFoundException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
         }
     }
 
     @Transactional
-    public SocialLoginResponse kakaoLogin(String accessToken) {
-        OAuth2UserInfo userInfo = getUserKakaoInfo(accessToken);
+    public SocialLoginResponse naverLogin(String accessToken) {
+        OAuth2UserInfo userInfo = getUserNaverInfo(accessToken);
         MemberLoginResponse memberResponse = findBySocialId(userInfo.getId());
 
         if(memberResponse == null) {
@@ -143,7 +143,7 @@ public class KakaoService {
     @Transactional
     public Long signUp(SocialLoginRequest socialLoginRequest) {
         Member member = Member.builder()
-                .socialProvider(SocialProvider.KAKAO)
+                .socialProvider(SocialProvider.NAVER)
                 .role(Role.USER)
                 .email(socialLoginRequest.getEmail())
                 .socialId(socialLoginRequest.getSocialId())

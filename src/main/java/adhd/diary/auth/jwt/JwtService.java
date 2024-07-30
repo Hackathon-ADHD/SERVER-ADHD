@@ -1,8 +1,11 @@
 package adhd.diary.auth.jwt;
 
 import adhd.diary.auth.dto.response.TokenResponse;
+import adhd.diary.auth.exception.token.TokenNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
+import adhd.diary.member.exception.MemberNotFoundException;
+import adhd.diary.response.ResponseCode;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -100,7 +103,7 @@ public class JwtService {
                     .getClaim(EMAIL_CLAIM)
                     .asString());
         }catch (Exception e) {
-            throw new IllegalArgumentException("엑세스 토큰이 유효하지 않습니다.");
+            throw new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED);
         }
     }
 
@@ -113,7 +116,7 @@ public class JwtService {
     }
 
     public void updateRefreshToken(String email, String refreshToken) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
         member.updateRefreshToken(refreshToken);
         memberRepository.saveAndFlush(member);
     }
@@ -130,15 +133,15 @@ public class JwtService {
         } catch (Exception e) {
             System.err.println("예상치 못한 오류 발생: " + e.getMessage());
         }
-        throw new IllegalArgumentException("유효하지 않은 토큰입니다");
+        throw new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED);
     }
 
     public Authentication getAuthentication(String accessToken) {
         String email = extractEmail(accessToken)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 액세스 토큰입니다"));
+                .orElseThrow(() -> new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED));
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
 
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority(member.getRole().getKey())
@@ -164,12 +167,12 @@ public class JwtService {
             } else if (REFRESH_TOKEN_SUBJECT.equals(subject)) {
                 return "RefreshToken";
             } else {
-                throw new IllegalArgumentException("알 수 없는 토큰 유형입니다.");
+                throw new TokenNotFoundException(ResponseCode.UNKNOWN_TOKEN_TYPE);
             }
         } catch (JWTVerificationException e) {
-            throw new IllegalArgumentException("토큰 검증에 실패했습니다: " + e.getMessage(), e);
+            throw new TokenNotFoundException(ResponseCode.TOKEN_VALIDATION_FAILED);
         } catch (Exception e) {
-            throw new IllegalArgumentException("예상치 못한 오류가 발생했습니다: " + e.getMessage(), e);
+            throw new TokenNotFoundException(ResponseCode.UNEXPECTED_ERROR);
         }
     }
 
@@ -178,15 +181,15 @@ public class JwtService {
 
         if (!isTokenValid(refreshToken)) {
             System.err.println("Invalid refreshToken");
-            throw new IllegalArgumentException("유효하지 않은 refresh token입니다.");
+            throw new TokenNotFoundException(ResponseCode.JWT_REFRESH_TOKEN_EXPIRED);
         }
 
         String email = extractEmail(refreshToken)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 refresh token입니다."));
+                .orElseThrow(() -> new TokenNotFoundException(ResponseCode.JWT_REFRESH_TOKEN_EXPIRED));
         System.out.println("Extracted email: " + email);
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
 
         String newAccessToken = createAccessToken(email);
         String newRefreshToken = createRefreshToken(email);

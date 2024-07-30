@@ -67,9 +67,7 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/login/complete-registration"),
                                 AntPathRequestMatcher.antMatcher("/")
                         ).authenticated().anyRequest().permitAll()
-                ).sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(
+                ).oauth2Login(
                         oAuth2LoginConfigurer ->
                                 oAuth2LoginConfigurer
                                         .successHandler(oAuth2LoginSuccessHandler)
