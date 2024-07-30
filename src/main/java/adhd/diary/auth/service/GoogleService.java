@@ -1,8 +1,9 @@
 package adhd.diary.auth.service;
 
-import adhd.diary.auth.dto.request.MemberKakaoSignupRequest;
+import adhd.diary.auth.dto.request.SocialLoginRequest;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
 import adhd.diary.auth.dto.response.SocialLoginResponse;
+import adhd.diary.auth.exception.LoginNotFoundException;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.auth.userinfo.GoogleOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;
@@ -10,6 +11,7 @@ import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import adhd.diary.member.domain.Role;
 import adhd.diary.member.domain.SocialProvider;
+import adhd.diary.response.ResponseCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,8 +32,6 @@ import java.util.Map;
 @Service
 public class GoogleService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GoogleService.class);
-
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String GOOGLE_CLIENT_ID;
 
@@ -50,7 +50,9 @@ public class GoogleService {
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
 
-    public GoogleService(MemberRepository memberRepository, JwtService jwtService, ObjectMapper objectMapper) {
+    public GoogleService(MemberRepository memberRepository,
+                         JwtService jwtService,
+                         ObjectMapper objectMapper) {
         this.memberRepository = memberRepository;
         this.jwtService = jwtService;
         this.objectMapper = objectMapper;
@@ -80,21 +82,19 @@ public class GoogleService {
                 JsonNode jsonNode = objectMapper.readTree(response.getBody());
                 return jsonNode.get("access_token").asText();
             } catch (JsonProcessingException e) {
-                logger.error("구글 액세스 토큰을 파싱하는데 실패했습니다.", e);
-                throw new IllegalArgumentException("구글 액세스 토큰을 가져오는데 실패했습니다.", e);
+                throw new LoginNotFoundException(ResponseCode.GOOGLE_TOKEN_RETRIEVAL_FAILED);
             }
         } else {
-            logger.error("구글 액세스 토큰 요청이 실패했습니다. 상태 코드: {}", response.getStatusCode());
-            throw new IllegalArgumentException("구글 액세스 토큰을 가져오는데 실패했습니다.");
+            throw new LoginNotFoundException(ResponseCode.GOOGLE_TOKEN_RETRIEVAL_FAILED);
         }
     }
 
     public OAuth2UserInfo getUserGoogleInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         HttpEntity<MultiValueMap<String,String>> googleRequest = new HttpEntity<>(headers);
-
         ResponseEntity<String> response= restTemplate.exchange(
                 GOOGLE_TOKEN_INFO,
                 HttpMethod.GET,
@@ -107,12 +107,10 @@ public class GoogleService {
                 Map<String, Object> attributes = objectMapper.readValue(response.getBody(), HashMap.class);
                 return new GoogleOAuth2UserInfo(attributes);
             } catch (JsonProcessingException e) {
-                logger.error("구글 사용자 정보를 파싱하는데 실패했습니다.", e);
-                throw new IllegalArgumentException("구글 사용자 정보를 가져오는데 실패했습니다.", e);
+                throw new LoginNotFoundException(ResponseCode.GOOGLE_USER_INFO_RETRIEVAL_FAILED);
             }
         } else {
-            logger.error("구글 사용자 정보 요청이 실패했습니다. 상태 코드: {}", response.getStatusCode());
-            throw new IllegalArgumentException("구글 사용자 정보를 가져오는데 실패했습니다.");
+            throw new LoginNotFoundException(ResponseCode.GOOGLE_USER_INFO_RETRIEVAL_FAILED);
         }
     }
 
@@ -122,7 +120,7 @@ public class GoogleService {
         MemberLoginResponse memberResponse = findBySocialId(userInfo.getId());
 
         if(memberResponse == null) {
-            signUp(new MemberKakaoSignupRequest(userInfo.getEmail(), userInfo.getId()));
+            signUp(new SocialLoginRequest(userInfo.getEmail(), userInfo.getId()));
             memberResponse = findBySocialId(userInfo.getId());
         }
 
@@ -137,16 +135,16 @@ public class GoogleService {
     @Transactional
     public MemberLoginResponse findBySocialId(String socialId) {
         Member member = memberRepository.findBySocialId(socialId).orElse(null);
-        return member != null ? new MemberLoginResponse(member.getEmail()) : null;
+        return member != null ? new MemberLoginResponse(member.getEmail(), member.getSocialId()) : null;
     }
 
     @Transactional
-    public Long signUp(MemberKakaoSignupRequest memberKakaoSignupRequest) {
+    public Long signUp(SocialLoginRequest socialLoginRequest) {
         Member member = Member.builder()
                 .socialProvider(SocialProvider.GOOGLE)
                 .role(Role.USER)
-                .email(memberKakaoSignupRequest.getEmail())
-                .socialId(memberKakaoSignupRequest.getSocialId())
+                .email(socialLoginRequest.getEmail())
+                .socialId(socialLoginRequest.getSocialId())
                 .build();
         return memberRepository.save(member).getId();
     }
