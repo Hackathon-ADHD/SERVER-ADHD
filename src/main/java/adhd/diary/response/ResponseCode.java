@@ -56,6 +56,8 @@ public enum ResponseCode {
     UNKNOWN_TOKEN_TYPE(HttpStatus.BAD_REQUEST, "알 수 없는 토큰 유형입니다."),
     TOKEN_VALIDATION_FAILED(HttpStatus.UNAUTHORIZED, "토큰 검증에 실패했습니다."),
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
+    JWT_REFRESH_SUCCESS(HttpStatus.OK, "JWT 토큰 재발급 성공"),
+
 
     // OAuth2 Token retrieval errors
     KAKAO_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "카카오 토큰 가져오기에 실패하였습니다."),
