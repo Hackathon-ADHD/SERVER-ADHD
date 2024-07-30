@@ -56,6 +56,12 @@ public class SecurityConfig {
                 ))
                 .authorizeHttpRequests(authorizationRequest ->
                         authorizationRequest.requestMatchers(
+                                AntPathRequestMatcher.antMatcher("/favicon.ico")
+                        ).permitAll()
+                )
+                .authorizeHttpRequests(authorizationRequest ->
+                        authorizationRequest.requestMatchers(
+                                AntPathRequestMatcher.antMatcher("/login"),
                                 AntPathRequestMatcher.antMatcher("/login/**")
                         ).permitAll()
                 ).authorizeHttpRequests(authorizationRequest ->
