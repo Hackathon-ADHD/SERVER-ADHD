@@ -18,16 +18,26 @@ public class ChatGptController {
 
     private final ChatGptService chatGptService;
 
-    @Value("${chatgpt.analyze}")
+    @Value("${chatgpt.emotion-analyze}")
     private String analyzeSentence;
+
+    @Value("${chatgpt.recommend-song}")
+    private String recommendSongSentence;
 
     public ChatGptController(ChatGptService chatGptService) {
         this.chatGptService = chatGptService;
     }
 
     @PostMapping("/chatgpt/diary-analyze")
-    public CompletableFuture<ResponseEntity<String>> createChatCompletion(@RequestParam String diaryContents) {
-        return chatGptService.analyzeDiaryContents(List.of(new ChatMessage(diaryContents + analyzeSentence)))
+    public CompletableFuture<ResponseEntity<String>> getAnalyzedDiary(@RequestParam String diaryContents) {
+        return chatGptService.analyzeDiary(List.of(new ChatMessage(diaryContents + analyzeSentence)))
+                .thenApply(ResponseEntity::ok)
+                .exceptionally(e -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error : " + e.getMessage()));
+    }
+
+    @PostMapping("/chatgpt/recommend-song")
+    public CompletableFuture<ResponseEntity<String>> getRecommendSong(@RequestParam String diaryContents) {
+        return chatGptService.recommendSong(List.of(new ChatMessage(diaryContents + recommendSongSentence)))
                 .thenApply(ResponseEntity::ok)
                 .exceptionally(e -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error : " + e.getMessage()));
     }
