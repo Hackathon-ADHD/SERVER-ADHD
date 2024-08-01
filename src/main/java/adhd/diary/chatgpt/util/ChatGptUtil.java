@@ -2,6 +2,11 @@ package adhd.diary.chatgpt.util;
 
 import adhd.diary.chatgpt.dto.ChatCompletionRequest;
 import adhd.diary.chatgpt.dto.ChatCompletionResponse;
+import adhd.diary.chatgpt.exception.ChatGptDeserializationException;
+import adhd.diary.chatgpt.exception.ChatGptJsonParsingException;
+import adhd.diary.chatgpt.exception.ChatGptRequestParsingException;
+import adhd.diary.chatgpt.exception.ChatGptRetrievalException;
+import adhd.diary.response.ResponseCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
@@ -32,17 +37,20 @@ public class ChatGptUtil {
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
 
-        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                .thenCompose(this::extractChatCompletionResponse)
-                .exceptionally(e -> "Error: " + e.getMessage());
+        try {
+            return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body)
+                    .thenCompose(this::extractChatCompletionResponse);
+        } catch (Exception e) {
+            throw new ChatGptRetrievalException(ResponseCode.CHATGPT_RETRIEVAL_FAILED);
+        }
     }
 
     public String jsonParsing(ChatCompletionRequest request) {
         try {
             return mapper.writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Json 변환 실패");
+        } catch (Exception e) {
+            throw new ChatGptRequestParsingException(ResponseCode.CHATGPT_REQUEST_PARSING_FAILED);
         }
     }
 
@@ -51,8 +59,7 @@ public class ChatGptUtil {
             try {
                 return extractAnswer(mapper.readValue(response, ChatCompletionResponse.class));
             } catch (Exception e) {
-                System.err.println("Failed to parse JSON: " + e.getMessage());
-                return null;
+                throw new ChatGptDeserializationException(ResponseCode.CHATGPT_DESERIALIZATION_FAILED);
             }
         });
     }
@@ -61,7 +68,7 @@ public class ChatGptUtil {
         try {
             return mapper.writeValueAsString(response.choices().get(0).getMessage().getContent());
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Failed to parse JSON: " + e.getMessage());
+            throw new ChatGptJsonParsingException(ResponseCode.CHATGPT_JSON_PARSING_FAILED);
         }
     }
 }

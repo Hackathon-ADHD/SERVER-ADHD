@@ -6,17 +6,16 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class ChatCompletionRequest {
 
-    @Value("${chatgpt.model}")
-    private String model = "gpt-3.5-turbo-0125";
-
+    private String model;
     private List<ChatMessage> messages;
 
     @JsonProperty("max_tokens")
-    @Value("${chatgpt.max-tokens}")
     private Integer maxTokens;
 
-    public ChatCompletionRequest(List<ChatMessage> messages) {
+    public ChatCompletionRequest(String model, List<ChatMessage> messages, Integer maxTokens) {
+        this.model = model;
         this.messages = messages;
+        this.maxTokens = maxTokens;
     }
 
     public String getModel() {

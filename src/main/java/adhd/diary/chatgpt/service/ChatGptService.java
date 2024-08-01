@@ -11,8 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatGptService {
 
+    @Value("${chatgpt.model}")
+    private String model;
+
     @Value("${openai.url.prompt}")
     private String API_URL;
+
+    @Value("${chatgpt.max-tokens}")
+    private Integer maxTokens;
 
     private final ChatGptUtil chatGptUtil;
 
@@ -20,11 +26,15 @@ public class ChatGptService {
         this.chatGptUtil = chatGptUtil;
     }
 
-    public CompletableFuture<String> analyzeDiaryContents(List<ChatMessage> messages) {
+    public CompletableFuture<String> analyzeDiary(List<ChatMessage> messages) {
+        return chatGptUtil.createChatCompletion(toChatCompletionRequest(messages), API_URL);
+    }
+
+    public CompletableFuture<String> recommendSong(List<ChatMessage> messages) {
         return chatGptUtil.createChatCompletion(toChatCompletionRequest(messages), API_URL);
     }
 
     public ChatCompletionRequest toChatCompletionRequest(List<ChatMessage> messages) {
-        return new ChatCompletionRequest(messages);
+        return new ChatCompletionRequest(model, messages, maxTokens);
     }
 }
