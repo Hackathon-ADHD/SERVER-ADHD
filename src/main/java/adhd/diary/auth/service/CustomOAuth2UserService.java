@@ -67,9 +67,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         else if(KAKAO.equals(registrationId)) {
             return SocialProvider.KAKAO;
         }
-        else if(GOOGLE.equals(registrationId)) {
-            return SocialProvider.GOOGLE;
-        }
         return null;
     }
 
