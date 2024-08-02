@@ -1,6 +1,5 @@
 package adhd.diary.auth;
 
-import adhd.diary.auth.userinfo.GoogleOAuth2UserInfo;
 import adhd.diary.auth.userinfo.KakaoOAuth2UserInfo;
 import adhd.diary.auth.userinfo.NaverOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;
@@ -66,9 +65,6 @@ public class OAuthAttributes {
         if (socialProvider == SocialProvider.KAKAO) {
             return ofKakao(userNameAttributeName, attributes);
         }
-        else if (socialProvider == SocialProvider.GOOGLE) {
-            return ofGoogle(userNameAttributeName, attributes);
-        }
         else if (socialProvider == SocialProvider.NAVER) {
             return ofNaver(userNameAttributeName, attributes);
         }
@@ -79,13 +75,6 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .nameAttributeKey(userNameAttributesName)
                 .oAuth2UserInfo(new KakaoOAuth2UserInfo(attributes))
-                .build();
-    }
-
-    private static OAuthAttributes ofGoogle(String userNameAttributesName, Map<String, Object> attributes) {
-        return OAuthAttributes.builder()
-                .nameAttributeKey(userNameAttributesName)
-                .oAuth2UserInfo(new GoogleOAuth2UserInfo(attributes))
                 .build();
     }
 
