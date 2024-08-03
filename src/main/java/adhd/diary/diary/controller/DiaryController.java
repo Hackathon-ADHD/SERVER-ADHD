@@ -32,9 +32,9 @@ public class DiaryController {
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryResponse);
     }
 
-    @GetMapping("/diary/date")
-    public ApiResponse<List<DiaryDateResponse>> diaryDate(@RequestParam("email") String email) {
-        List<DiaryDateResponse> diaryDateResponse = diaryService.findDateByEmail(email);
+    @GetMapping("/diary/dates")
+    public ApiResponse<List<DiaryDateResponse>> diaryDate() {
+        List<DiaryDateResponse> diaryDateResponse = diaryService.findDatesByEmail();
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryDateResponse);
     }
 

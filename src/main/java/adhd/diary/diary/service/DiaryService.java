@@ -61,8 +61,8 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public List<DiaryDateResponse> findDateByEmail(String email) {
-        Member member = memberRepository.findByEmail(email)
+    public List<DiaryDateResponse> findDatesByEmail() {
+        Member member = memberRepository.findByEmail(getAuthenticationMemberEmail())
                 .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
         List<Diary> diaries = diaryRepository.findByMemberId(member.getId())
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
@@ -100,5 +100,10 @@ public class DiaryService {
         if(!diary.getMember().getEmail().equals(email)){
             throw new DiaryForbiddenException(ResponseCode.DIARY_FORBIDDEN);
         }
+    }
+
+    private static String getAuthenticationMemberEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }
