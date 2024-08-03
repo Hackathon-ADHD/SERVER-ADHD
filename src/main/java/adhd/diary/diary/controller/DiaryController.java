@@ -1,14 +1,13 @@
 package adhd.diary.diary.controller;
 
+import adhd.diary.diary.dto.response.DiaryDateResponse;
 import adhd.diary.diary.service.DiaryService;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryResponse;
-import java.net.URI;
 import java.util.List;
 
 import adhd.diary.response.ApiResponse;
 import adhd.diary.response.ResponseCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +30,12 @@ public class DiaryController {
     public ApiResponse<DiaryResponse> diary(@PathVariable Long id) {
         DiaryResponse diaryResponse = diaryService.findById(id);
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryResponse);
+    }
+
+    @GetMapping("/diary/date/{id}")
+    public ApiResponse<DiaryDateResponse> diaryDate(@PathVariable Long id) {
+        DiaryDateResponse diaryDateResponse = diaryService.findDateById(id);
+        return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryDateResponse);
     }
 
     @GetMapping("/diarys")
