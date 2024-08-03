@@ -3,6 +3,7 @@ package adhd.diary.diary.service;
 import adhd.diary.diary.domain.Diary;
 import adhd.diary.diary.domain.DiaryRepository;
 import adhd.diary.diary.dto.request.DiaryRequest;
+import adhd.diary.diary.dto.response.DiaryDateResponse;
 import adhd.diary.diary.dto.response.DiaryResponse;
 import adhd.diary.diary.exception.DiaryForbiddenException;
 import adhd.diary.diary.exception.DiaryNotFoundException;
@@ -49,12 +50,21 @@ public class DiaryService {
 
         return diaries.stream().map(DiaryResponse::new).toList();
     }
+
     @Transactional(readOnly = true)
     public DiaryResponse findById(Long id) {
         Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(diary);
         return new DiaryResponse(diary);
+    }
+
+    @Transactional(readOnly = true)
+    public DiaryDateResponse findDateById(Long id) {
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
+        authorizePostMember(diary);
+        return new DiaryDateResponse(diary);
     }
 
     @Transactional
