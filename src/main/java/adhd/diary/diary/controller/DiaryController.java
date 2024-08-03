@@ -33,8 +33,8 @@ public class DiaryController {
     }
 
     @GetMapping("/diary/date/{id}")
-    public ApiResponse<DiaryDateResponse> diaryDate(@PathVariable Long id) {
-        DiaryDateResponse diaryDateResponse = diaryService.findDateById(id);
+    public ApiResponse<List<DiaryDateResponse>> diaryDate(@PathVariable Long id) {
+        List<DiaryDateResponse> diaryDateResponse = diaryService.findDateByMemberId(id);
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryDateResponse);
     }
 
