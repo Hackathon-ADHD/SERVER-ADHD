@@ -9,8 +9,6 @@ import adhd.diary.diary.exception.DiaryForbiddenException;
 import adhd.diary.diary.exception.DiaryNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
-import adhd.diary.member.domain.Role;
-import adhd.diary.member.domain.SocialProvider;
 import adhd.diary.member.exception.MemberNotFoundException;
 import adhd.diary.response.ResponseCode;
 import org.springframework.security.core.Authentication;
@@ -62,11 +60,13 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public DiaryDateResponse findDateById(Long id) {
-        Diary diary = diaryRepository.findById(id)
+    public List<DiaryDateResponse> findDatesByEmail() {
+        Member member = memberRepository.findByEmail(getAuthenticationMemberEmail())
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
+        List<Diary> diaries = diaryRepository.findByMemberId(member.getId())
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
-        authorizePostMember(diary);
-        return new DiaryDateResponse(diary);
+        authorizePostMember(diaries.get(0));
+        return diaries.stream().map(DiaryDateResponse::new).toList();
     }
 
     @Transactional
@@ -99,5 +99,10 @@ public class DiaryService {
         if(!diary.getMember().getEmail().equals(email)){
             throw new DiaryForbiddenException(ResponseCode.DIARY_FORBIDDEN);
         }
+    }
+
+    private static String getAuthenticationMemberEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }

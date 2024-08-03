@@ -32,9 +32,9 @@ public class DiaryController {
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryResponse);
     }
 
-    @GetMapping("/diary/date/{id}")
-    public ApiResponse<DiaryDateResponse> diaryDate(@PathVariable Long id) {
-        DiaryDateResponse diaryDateResponse = diaryService.findDateById(id);
+    @GetMapping("/diary/dates")
+    public ApiResponse<List<DiaryDateResponse>> diaryDate() {
+        List<DiaryDateResponse> diaryDateResponse = diaryService.findDatesByEmail();
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryDateResponse);
     }
 
