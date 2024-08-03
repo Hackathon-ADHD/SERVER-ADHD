@@ -9,6 +9,8 @@ import adhd.diary.diary.exception.DiaryForbiddenException;
 import adhd.diary.diary.exception.DiaryNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
+import adhd.diary.member.domain.Role;
+import adhd.diary.member.domain.SocialProvider;
 import adhd.diary.member.exception.MemberNotFoundException;
 import adhd.diary.response.ResponseCode;
 import org.springframework.security.core.Authentication;

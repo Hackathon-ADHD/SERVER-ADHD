@@ -31,4 +31,15 @@ public class DiaryExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
     }
+
+    @ExceptionHandler(DiaryLocalDateConverterException.class)
+    public ResponseEntity<ErrorResponse> handleDiaryLocalDateConverterException(DiaryForbiddenException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getResponseCode().name(),
+                exception.getResponseCode().getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
+    }
 }

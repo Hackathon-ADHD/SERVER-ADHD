@@ -22,6 +22,7 @@ public enum ResponseCode {
      */
     DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "일기를 찾을 수 없습니다."),
     DIARY_FORBIDDEN(HttpStatus.FORBIDDEN, "일기장에 접근할 권한이 없습니다."),
+    DIARY_CONVERTER_FAILED(HttpStatus.BAD_REQUEST, "Date 형식이 올바르지 않습니다."),
 
     DIARY_READ_ALL_SUCCESS(HttpStatus.OK, "일기 전체 조회 성공"),
     DIARY_READ_BY_ID_SUCCESS(HttpStatus.OK, "일기 조회 성공"),

@@ -21,9 +21,10 @@ public class Diary extends BaseTimeEntity {
     private String recommendSongs;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 100)
     private Emotion emotion;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "DATE")
     private LocalDate date;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
