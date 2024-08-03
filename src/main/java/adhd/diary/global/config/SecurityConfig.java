@@ -62,7 +62,8 @@ public class SecurityConfig {
                         ))
                 .authorizeHttpRequests(authorizationRequest ->
                         authorizationRequest.requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/favicon.ico")
+                                AntPathRequestMatcher.antMatcher("/favicon.ico"),
+                                AntPathRequestMatcher.antMatcher("//swagger-ui-diary.html")
                         ).permitAll()
                 )
                 .authorizeHttpRequests(authorizationRequest ->
