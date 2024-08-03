@@ -11,7 +11,6 @@ import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import adhd.diary.member.exception.MemberNotFoundException;
 import adhd.diary.response.ResponseCode;
-import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
