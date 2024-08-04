@@ -6,11 +6,15 @@ import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryDateResponse;
 import adhd.diary.diary.dto.response.DiaryResponse;
 import adhd.diary.diary.exception.DiaryForbiddenException;
+import adhd.diary.diary.exception.DiaryLocalDateConverterException;
 import adhd.diary.diary.exception.DiaryNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import adhd.diary.member.exception.MemberNotFoundException;
 import adhd.diary.response.ResponseCode;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -69,6 +73,13 @@ public class DiaryService {
         return diaries.stream().map(DiaryDateResponse::new).toList();
     }
 
+    @Transactional(readOnly = true)
+    public DiaryResponse findLastYearDiary(String date) {
+        Diary diary = diaryRepository.findLastYearByDate(convertLastDate(date))
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
+        return new DiaryResponse(diary);
+    }
+
     @Transactional
     public void deleteById(Long id) {
         Diary diary = diaryRepository.findById(id)
@@ -104,5 +115,15 @@ public class DiaryService {
     private static String getAuthenticationMemberEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
+    }
+
+    public LocalDate convertLastDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate lastDate = LocalDate.parse(date, formatter);
+            return lastDate.minusYears(1);
+        } catch (DateTimeParseException e) {
+            throw new DiaryLocalDateConverterException(ResponseCode.DIARY_CONVERTER_FAILED);
+        }
     }
 }
