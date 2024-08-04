@@ -73,7 +73,7 @@ public class DiaryService {
         return diaries.stream().map(DiaryDateResponse::new).toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public DiaryResponse findLastYearDiary(String date) {
         Diary diary = diaryRepository.findLastYearByDate(convertLastDate(date))
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
