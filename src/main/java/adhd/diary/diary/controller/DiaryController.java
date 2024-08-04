@@ -38,6 +38,12 @@ public class DiaryController {
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_ID_SUCCESS, diaryDateResponse);
     }
 
+    @GetMapping("/diary/last-year")
+    public ApiResponse<DiaryResponse> getDiaryFromLastYear(@RequestParam String date) {
+        DiaryResponse lastYearDiary = diaryService.findLastYearDiary(date);
+        return ApiResponse.success(ResponseCode.DIARY_READ_BY_YEAR_SUCCESS, lastYearDiary);
+    }
+
     @GetMapping("/diarys")
     public ApiResponse<List<DiaryResponse>> diaryAll() {
         List<DiaryResponse> diaryResponses = diaryService.findAll();

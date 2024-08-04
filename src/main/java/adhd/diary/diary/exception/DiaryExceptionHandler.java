@@ -33,7 +33,7 @@ public class DiaryExceptionHandler {
     }
 
     @ExceptionHandler(DiaryLocalDateConverterException.class)
-    public ResponseEntity<ErrorResponse> handleDiaryLocalDateConverterException(DiaryForbiddenException exception, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleDiaryLocalDateConverterException(DiaryLocalDateConverterException exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 exception.getResponseCode().name(),
