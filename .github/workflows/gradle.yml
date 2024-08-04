@@ -47,7 +47,7 @@ jobs:
         run: zip -r myapp.zip build/libs/*.jar appspec.yml scripts
 
       - name: Upload the ZIP file to S3
-        run: aws s3 cp myapp.zip s3://ondegande-s3-build/
+        run: aws s3 cp myapp.zip s3://adhd-build/
 
       - name: Deploy to CodeDeploy
         run: |
