@@ -70,7 +70,6 @@ public class DiaryService {
                 .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
         List<Diary> diaries = diaryRepository.findByMemberId(member.getId())
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
-        authorizePostMember(diaries.get(0));
         return diaries.stream().map(DiaryDateResponse::new).toList();
     }
 
