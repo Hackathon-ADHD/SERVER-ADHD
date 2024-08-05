@@ -5,6 +5,7 @@ import adhd.diary.diary.domain.DiaryRepository;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryDateResponse;
 import adhd.diary.diary.dto.response.DiaryResponse;
+import adhd.diary.diary.dto.response.DiaryWeekendResponse;
 import adhd.diary.diary.exception.DiaryForbiddenException;
 import adhd.diary.diary.exception.DiaryLocalDateConverterException;
 import adhd.diary.diary.exception.DiaryNotFoundException;
@@ -79,6 +80,15 @@ public class DiaryService {
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(diary);
         return new DiaryResponse(diary);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DiaryWeekendResponse> findWeekendsDiaries() {
+        Member member = memberRepository.findByEmail(getAuthenticationMemberEmail())
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
+        List<Diary> diaries = diaryRepository.findWeekeendByMemberId(member.getId())
+                .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
+        return diaries.stream().map(DiaryWeekendResponse::new).toList();
     }
 
     @Transactional
