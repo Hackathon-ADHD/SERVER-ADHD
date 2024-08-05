@@ -13,7 +13,6 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @Configuration
 @EnableRedisRepositories
 public class RedisRepositoryConfig {
-
     private final RedisProperties redisProperties;
 
     public RedisRepositoryConfig(RedisProperties redisProperties) {
@@ -30,7 +29,7 @@ public class RedisRepositoryConfig {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Object.class)); // Value serializer 수정
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Object.class));
         return redisTemplate;
     }
 }
