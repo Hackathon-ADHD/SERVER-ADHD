@@ -3,7 +3,8 @@ package adhd.diary.auth.service;
 import adhd.diary.auth.dto.request.SocialLoginRequest;
 import adhd.diary.auth.dto.response.SocialLoginResponse;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
-import adhd.diary.auth.exception.login.LoginNotFoundException;
+import adhd.diary.auth.exception.KakaoMemberRequestFailedException;
+import adhd.diary.auth.exception.KakaoTokenRequestFailedException;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.auth.userinfo.KakaoOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;
@@ -45,7 +46,6 @@ public class KakaoService {
     @Value(("${spring.security.oauth2.client.provider.kakao.user-info-uri}"))
     private String KAKAO_USER_INFO_URI;
 
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -84,10 +84,10 @@ public class KakaoService {
                 JsonNode jsonNode = objectMapper.readTree(response.getBody());
                 return jsonNode.get("access_token").asText();
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.KAKAO_LOGIN_SUCCESS);
+                throw new KakaoTokenRequestFailedException(ResponseCode.KAKAO_TOKEN_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.KAKAO_TOKEN_RETRIEVAL_FAILED);
+            throw new KakaoMemberRequestFailedException(ResponseCode.KAKAO_TOKEN_RETRIEVAL_FAILED);
         }
     }
 
@@ -109,10 +109,10 @@ public class KakaoService {
                 Map<String, Object> attributes = objectMapper.readValue(response.getBody(), HashMap.class);
                 return new KakaoOAuth2UserInfo(attributes);
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
+                throw new KakaoMemberRequestFailedException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
+            throw new KakaoMemberRequestFailedException(ResponseCode.KAKAO_USER_INFO_RETRIEVAL_FAILED);
         }
     }
 

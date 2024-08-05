@@ -3,9 +3,9 @@ package adhd.diary.auth.exception.login;
 import adhd.diary.global.exception.BaseException;
 import adhd.diary.response.ResponseCode;
 
-public class LoginNotFoundException extends BaseException {
+public class LogoutFailureException extends BaseException {
 
-    public LoginNotFoundException(ResponseCode responseCode) {
+    public LogoutFailureException(ResponseCode responseCode) {
         super(responseCode);
     }
 }

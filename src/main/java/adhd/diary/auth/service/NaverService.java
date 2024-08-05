@@ -3,7 +3,8 @@ package adhd.diary.auth.service;
 import adhd.diary.auth.dto.request.SocialLoginRequest;
 import adhd.diary.auth.dto.response.MemberLoginResponse;
 import adhd.diary.auth.dto.response.SocialLoginResponse;
-import adhd.diary.auth.exception.login.LoginNotFoundException;
+import adhd.diary.auth.exception.NaverMemberRequestFailedException;
+import adhd.diary.auth.exception.NaverTokenRequestFailedException;
 import adhd.diary.auth.jwt.JwtService;
 import adhd.diary.auth.userinfo.NaverOAuth2UserInfo;
 import adhd.diary.auth.userinfo.OAuth2UserInfo;
@@ -45,7 +46,6 @@ public class NaverService {
     @Value(("${spring.security.oauth2.client.provider.naver.user-info-uri}"))
     private String NAVER_USER_INFO_URI;
 
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -84,10 +84,10 @@ public class NaverService {
                 JsonNode jsonNode = objectMapper.readTree(response.getBody());
                 return jsonNode.get("access_token").asText();
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
+                throw new NaverTokenRequestFailedException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
+            throw new NaverTokenRequestFailedException(ResponseCode.NAVER_TOKEN_RETRIEVAL_FAILED);
         }
     }
 
@@ -109,10 +109,10 @@ public class NaverService {
                 Map<String, Object> attributes = objectMapper.readValue(response.getBody(), HashMap.class);
                 return new NaverOAuth2UserInfo(attributes);
             } catch (JsonProcessingException e) {
-                throw new LoginNotFoundException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
+                throw new NaverMemberRequestFailedException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
             }
         } else {
-            throw new LoginNotFoundException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
+            throw new NaverMemberRequestFailedException(ResponseCode.NAVER_USER_INFO_RETRIEVAL_FAILED);
         }
     }
 

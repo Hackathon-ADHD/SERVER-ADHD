@@ -31,4 +31,25 @@ public class AuthExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
     }
+    @ExceptionHandler(NaverTokenRequestFailedException.class)
+    public ResponseEntity<ErrorResponse> handleNaverTokenRequestFailedException(NaverTokenRequestFailedException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getResponseCode().name(),
+                exception.getResponseCode().getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
+    }
+
+    @ExceptionHandler(NaverMemberRequestFailedException.class)
+    public ResponseEntity<ErrorResponse> handleNaverMemberRequestFailedException(NaverMemberRequestFailedException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getResponseCode().name(),
+                exception.getResponseCode().getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
+    }
 }

@@ -48,15 +48,23 @@ public enum ResponseCode {
      * OAuth2 Token retrieval errors
      */
     KAKAO_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "카카오 토큰 가져오기에 실패하였습니다."),
-    GOOGLE_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "구글 토큰 가져오기에 실패하였습니다."),
     NAVER_TOKEN_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "네이버 토큰 가져오기에 실패하였습니다."),
 
     /**
      * OAuth2 User info retrieval errors
      */
     KAKAO_USER_INFO_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "카카오 사용자 정보를 가져오는데 실패하였습니다."),
-    GOOGLE_USER_INFO_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "구글 사용자 정보를 가져오는데 실패하였습니다."),
     NAVER_USER_INFO_RETRIEVAL_FAILED(HttpStatus.UNAUTHORIZED, "네이버 사용자 정보를 가져오는데 실패하였습니다."),
+
+    /**
+     * OAuth2 Logout response
+     */
+    KAKAO_LOGOUT_SUCCESS(HttpStatus.OK, "카카오 로그아웃 성공"),
+    NAVER_LOGOUT_SUCCESS(HttpStatus.OK, "네이버 로그아웃 성공"),
+    KAKAO_LOGOUT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 로그아웃 실패하였습니다."),
+    NAVER_LOGOUT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "네이버 로그아웃 실패하였습니다."),
+    LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
+    LOGOUT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "로그아웃 실패하였습니다."),
 
     /**
      * ChatGPT response
