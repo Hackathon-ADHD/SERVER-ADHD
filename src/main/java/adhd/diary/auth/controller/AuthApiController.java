@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AuthController {
+public class AuthApiController {
 
     private final JwtService jwtService;
 
-    public AuthController(JwtService jwtService) {
+    public AuthApiController(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
     @PostMapping("/api/auth/token/refresh")
-    public ApiResponse<?> refreshAccessToken(HttpServletResponse response, @RequestHeader("RefreshToken") String refreshToken) {
+    public ApiResponse<?> refreshAccessToken(HttpServletResponse response, @RequestHeader("RefreshToken") String authorizationHeader) {
         try {
+            String refreshToken = jwtService.extractRefreshTokenFromHeader(authorizationHeader);
             TokenResponse tokenResponse = jwtService.refreshTokens(refreshToken);
             jwtService.sendAccessAndRefreshToken(response, tokenResponse.getAccessToken(), tokenResponse.getRefreshToken());
 

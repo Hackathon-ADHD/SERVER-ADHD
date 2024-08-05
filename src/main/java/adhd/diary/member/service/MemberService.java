@@ -3,6 +3,7 @@ package adhd.diary.member.service;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
 import adhd.diary.member.dto.request.CompleteRegistrationRequest;
+import adhd.diary.member.dto.response.MemberLogoutResponse;
 import adhd.diary.member.dto.response.MemberResponse;
 import adhd.diary.member.dto.response.MemberSignUpResponse;
 import adhd.diary.member.exception.MemberNotFoundException;
@@ -50,5 +51,21 @@ public class MemberService {
         memberRepository.saveAndFlush(member);
 
         return new MemberSignUpResponse(member.getEmail(), member.getRole(), member.getSocialProvider(), member.getSocialId(), member.getNickname(), member.getBirthDay());
+    }
+
+    @Transactional
+    public MemberResponse findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
+
+        return new MemberResponse(member.getEmail(), member.getRole(), member.getSocialProvider(), member.getSocialId(), member.getNickname(), member.getBirthDay());
+    }
+
+    @Transactional
+    public MemberLogoutResponse logout(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
+
+        return new MemberLogoutResponse(member.getEmail(), member.getSocialProvider(), member.getSocialId(), member.getRefreshToken());
     }
 }

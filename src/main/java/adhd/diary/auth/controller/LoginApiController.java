@@ -10,14 +10,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
-public class LoginController {
+public class LoginApiController {
 
     private final KakaoService kakaoService;
     private final NaverService naverService;
 
-    public LoginController(KakaoService kakaoService, NaverService naverService) {
+    public LoginApiController(KakaoService kakaoService, NaverService naverService) {
         this.kakaoService = kakaoService;
         this.naverService = naverService;
+    }
+
+    @GetMapping
+    public String login() {
+        return "로그인 페이지입니다.";
     }
 
     @GetMapping("/kakao")

@@ -38,14 +38,16 @@ public class JwtService {
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
     private static final String AUTHORIZATION = "Authorization";
-    private static final String AUTHORIZATION_REFRESH_TOKEN = "refreshToken";
+    private static final String AUTHORIZATION_REFRESH_TOKEN = "RefreshToken";
 
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
+    private JwtBlacklistService jwtBlacklistService;
 
-    public JwtService(MemberRepository memberRepository) {
+    public JwtService(MemberRepository memberRepository, JwtBlacklistService jwtBlacklistService) {
         this.memberRepository = memberRepository;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     public String createAccessToken(String email) {
@@ -123,8 +125,11 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         try {
+            if (jwtBlacklistService.isTokenBlacklisted(token)) {
+                return false;
+            }
             var verifier = JWT.require(Algorithm.HMAC512(secretKey)).build();
-            var decodedJWT = verifier.verify(token);
+            verifier.verify(token);
             return true;
         } catch (TokenExpiredException e) {
             System.err.println("토큰이 만료되었습니다: " + e.getMessage());
@@ -196,5 +201,18 @@ public class JwtService {
         updateRefreshToken(email, newRefreshToken);
 
         return new TokenResponse(newAccessToken, newRefreshToken);
+    }
+
+    public String extractAccessTokenFromHeader(String authorizationHeader) {
+        return Optional.ofNullable(authorizationHeader)
+                .filter(header -> header.startsWith(BEARER))
+                .map(header -> header.replace(BEARER, ""))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Authorization header"));
+    }
+    public String extractRefreshTokenFromHeader(String authorizationHeader) {
+        return Optional.ofNullable(authorizationHeader)
+                .filter(header -> header.startsWith(BEARER))
+                .map(header -> header.replace(BEARER, ""))
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Authorization header"));
     }
 }
