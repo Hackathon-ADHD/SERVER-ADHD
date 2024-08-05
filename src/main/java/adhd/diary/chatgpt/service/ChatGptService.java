@@ -6,6 +6,7 @@ import adhd.diary.chatgpt.util.ChatGptUtil;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,11 +27,11 @@ public class ChatGptService {
         this.chatGptUtil = chatGptUtil;
     }
 
-    public CompletableFuture<String> analyzeDiary(List<ChatMessage> messages) {
+    public String analyzeDiary(List<ChatMessage> messages) {
         return chatGptUtil.createChatCompletion(toChatCompletionRequest(messages), API_URL);
     }
 
-    public CompletableFuture<String> recommendSong(List<ChatMessage> messages) {
+    public String recommendSong(List<ChatMessage> messages) {
         return chatGptUtil.createChatCompletion(toChatCompletionRequest(messages), API_URL);
     }
 
