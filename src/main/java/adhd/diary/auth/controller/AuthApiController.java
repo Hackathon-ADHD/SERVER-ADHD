@@ -22,7 +22,8 @@ public class AuthApiController {
 
     @PostMapping("/api/auth/token/refresh")
     @Operation(summary = "refreshToken을 이용해 token을 재발급", description = "사용자의 토큰 정보가 만료되었을 경우 재발급 받기 위해 사용하는 API")
-    public ApiResponse<?> refreshAccessToken(HttpServletResponse response, @RequestHeader("RefreshToken") String authorizationHeader) {
+    public ApiResponse<?> refreshAccessToken(HttpServletResponse response, @RequestHeader("Authorization") String authorizationHeader) {
+        System.out.println("go");
         try {
             String refreshToken = jwtService.extractRefreshTokenFromHeader(authorizationHeader);
             TokenResponse tokenResponse = jwtService.refreshTokens(refreshToken);
