@@ -10,7 +10,7 @@ public record DiaryResponse(Long id,
                             String analyzedContents,
                             String recommendSongs,
                             Emotion emotion,
-                            LocalDate date) {
+                            String date) {
 
     public DiaryResponse(Diary diary) {
         this(
@@ -19,7 +19,11 @@ public record DiaryResponse(Long id,
                 diary.getAnalyzedContents(),
                 diary.getRecommendSongs(),
                 diary.getEmotion(),
-                diary.getDate()
+                convertToString(diary.getDate())
         );
+    }
+
+    public static String convertToString(LocalDate date) {
+        return date.toString();
     }
 }

@@ -7,13 +7,17 @@ import java.time.LocalDate;
 public record DiaryDateResponse(Long id,
                                 String content,
                                 Emotion emotion,
-                                LocalDate date) {
+                                String date) {
     public DiaryDateResponse(Diary diary) {
         this(
                 diary.getId(),
                 diary.getContent(),
                 diary.getEmotion(),
-                diary.getDate()
+                convertToString(diary.getDate())
         );
+    }
+
+    public static String convertToString(LocalDate date) {
+        return date.toString();
     }
 }
