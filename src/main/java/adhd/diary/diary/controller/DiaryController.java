@@ -1,6 +1,7 @@
 package adhd.diary.diary.controller;
 
 import adhd.diary.diary.dto.response.DiaryDateResponse;
+import adhd.diary.diary.dto.response.DiaryWeekendResponse;
 import adhd.diary.diary.service.DiaryService;
 import adhd.diary.diary.dto.request.DiaryRequest;
 import adhd.diary.diary.dto.response.DiaryResponse;
@@ -47,6 +48,13 @@ public class DiaryController {
     public ApiResponse<DiaryResponse> getDiaryFromLastYear(@RequestParam String date) {
         DiaryResponse lastYearDiary = diaryService.findLastYearDiary(date);
         return ApiResponse.success(ResponseCode.DIARY_READ_BY_YEAR_SUCCESS, lastYearDiary);
+    }
+
+    @GetMapping("/diary/weekends")
+    @Operation(summary = "일주일 달력 정보를 조회", description = "(임시) 보내준 날짜")
+    public ApiResponse<List<DiaryWeekendResponse>> getWeekendDiaries() {
+        List<DiaryWeekendResponse> diaryWeekendResponses = diaryService.findWeekendsDiaries();
+        return ApiResponse.success(ResponseCode.DIARY_READ_WEEKEND, diaryWeekendResponses);
     }
 
     @DeleteMapping("/diary/{id}")

@@ -29,6 +29,7 @@ public enum ResponseCode {
     DIARY_UPDATE_SUCCESS(HttpStatus.OK, "일기 수정 성공"),
     DIARY_DELETE_SUCCESS(HttpStatus.OK, "일기 삭제 성공"),
     DIARY_READ_BY_YEAR_SUCCESS(HttpStatus.OK, "작년 일기 정보 조회 성공"),
+    DIARY_READ_WEEKEND(HttpStatus.OK, "주간 일기 정보 조회 성공"),
 
     DIARY_CREATE_SUCCESS(HttpStatus.CREATED, "일기 생성 성공"),
 
