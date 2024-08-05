@@ -77,6 +77,7 @@ public class DiaryService {
     public DiaryResponse findLastYearDiary(String date) {
         Diary diary = diaryRepository.findLastYearByDate(convertLastDate(date))
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
+        authorizePostMember(diary);
         return new DiaryResponse(diary);
     }
 
