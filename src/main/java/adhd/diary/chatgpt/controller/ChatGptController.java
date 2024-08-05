@@ -2,6 +2,7 @@ package adhd.diary.chatgpt.controller;
 
 import adhd.diary.chatgpt.dto.ChatMessage;
 import adhd.diary.chatgpt.service.ChatGptService;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ public class ChatGptController {
     }
 
     @PostMapping("/chatgpt/diary-analyze")
+    @Operation(summary = "일기 내용 감정 분석", description = "사용자가 작성한 일기 내용으로 감정을 분석하기 위해 사용하는 API")
     public CompletableFuture<ResponseEntity<String>> getAnalyzedDiary(@RequestParam String diaryContents) {
         return chatGptService.analyzeDiary(List.of(new ChatMessage(diaryContents + analyzeSentence)))
                 .thenApply(ResponseEntity::ok)
@@ -36,6 +38,7 @@ public class ChatGptController {
     }
 
     @PostMapping("/chatgpt/recommend-song")
+    @Operation(summary = "일기 내용 바탕 노래 추천", description = "사용자가 작성한 일기 내용을 바탕으로 노래를 추천받기 위해 사용하는 API")
     public CompletableFuture<ResponseEntity<String>> getRecommendSong(@RequestParam String diaryContents) {
         return chatGptService.recommendSong(List.of(new ChatMessage(diaryContents + recommendSongSentence)))
                 .thenApply(ResponseEntity::ok)
