@@ -29,19 +29,17 @@ public class ChatGptController {
         this.chatGptService = chatGptService;
     }
 
-    @PostMapping("/chatgpt/diary-analyze")
+    @PostMapping("/chatgpt/diary-analyzes")
     @Operation(summary = "일기 내용 감정 분석", description = "사용자가 작성한 일기 내용으로 감정을 분석하기 위해 사용하는 API")
-    public CompletableFuture<ResponseEntity<String>> getAnalyzedDiary(@RequestParam String diaryContents) {
-        return chatGptService.analyzeDiary(List.of(new ChatMessage(diaryContents + analyzeSentence)))
-                .thenApply(ResponseEntity::ok)
-                .exceptionally(e -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error : " + e.getMessage()));
+    public ResponseEntity<String> getAnalyzedDiary(@RequestParam String diaryContents) {
+        String response = chatGptService.analyzeDiary(List.of(new ChatMessage(diaryContents + analyzeSentence)));
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/chatgpt/recommend-song")
+    @PostMapping("/chatgpt/recommend-songs")
     @Operation(summary = "일기 내용 바탕 노래 추천", description = "사용자가 작성한 일기 내용을 바탕으로 노래를 추천받기 위해 사용하는 API")
-    public CompletableFuture<ResponseEntity<String>> getRecommendSong(@RequestParam String diaryContents) {
-        return chatGptService.recommendSong(List.of(new ChatMessage(diaryContents + recommendSongSentence)))
-                .thenApply(ResponseEntity::ok)
-                .exceptionally(e -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error : " + e.getMessage()));
+    public ResponseEntity<String> getRecommendSong(@RequestParam String diaryContents) {
+        String response = chatGptService.recommendSong(List.of(new ChatMessage(diaryContents + recommendSongSentence)));
+        return ResponseEntity.ok(response);
     }
 }
