@@ -6,6 +6,7 @@ import adhd.diary.auth.service.NaverService;
 import adhd.diary.response.ApiResponse;
 import adhd.diary.response.ResponseCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,7 @@ public class LoginApiController {
     }
 
     @GetMapping("/kakao")
+    @Operation(summary = "카카오 소셜 로그인", description = "사용자가 카카오 소셜로그인을 하기 위해 사용하는 API")
     public ApiResponse<SocialLoginResponse> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         String accessToken = kakaoService.getKakaoAccessToken(code);
         SocialLoginResponse socialLoginResponse = kakaoService.kakaoLogin(accessToken);
@@ -33,6 +35,7 @@ public class LoginApiController {
     }
 
     @GetMapping("/naver")
+    @Operation(summary = "네이버 소셜 로그인", description = "사용자가 네이버 소셜로그인을 하기 위해 사용하는 API")
     public ApiResponse<SocialLoginResponse> naverLogin(@RequestParam String code) throws JsonProcessingException {
         String accessToken = naverService.getNaverAccessToken(code);
         SocialLoginResponse socialLoginResponse = naverService.naverLogin(accessToken);
