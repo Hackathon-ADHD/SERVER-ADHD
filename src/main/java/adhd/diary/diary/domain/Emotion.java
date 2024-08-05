@@ -2,7 +2,7 @@ package adhd.diary.diary.domain;
 
 public enum Emotion {
 
-    JUST("그냥", 5),
+    SOSO("그냥", 5),
     HAPPY("기분 좋아", 8),
     EXCITED("신나", 9),
     AMAZED("놀라워", 7),
