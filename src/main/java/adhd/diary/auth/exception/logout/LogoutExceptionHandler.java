@@ -1,4 +1,4 @@
-package adhd.diary.auth.exception.login;
+package adhd.diary.auth.exception.logout;
 
 import adhd.diary.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-public class LoginExceptionHandler {
+public class LogoutExceptionHandler {
 
     @ExceptionHandler(LogoutFailureException.class)
     public ResponseEntity<ErrorResponse> handleMemberNotFoundException(LogoutFailureException exception, WebRequest request) {
