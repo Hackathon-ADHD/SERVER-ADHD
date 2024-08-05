@@ -6,6 +6,8 @@ import adhd.diary.member.dto.response.MemberLogoutResponse;
 import adhd.diary.member.service.MemberService;
 import adhd.diary.response.ApiResponse;
 import adhd.diary.response.ResponseCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +31,7 @@ public class LogoutApiController {
     }
 
     @PostMapping("/api/logout")
+    @Operation(summary = "access token을 이용해 로그아웃", description = "액세스 토큰을 사용하여 사용자를 로그아웃 시키는 API")
     public ApiResponse<?> logout(Principal principal, @RequestHeader("Authorization") String authorizationHeader) {
         logger.info("로그아웃 요청 받음");
 

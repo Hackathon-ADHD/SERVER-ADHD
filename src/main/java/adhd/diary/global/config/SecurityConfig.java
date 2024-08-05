@@ -88,8 +88,8 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/signup/birthday"),
                                 AntPathRequestMatcher.antMatcher("/login/complete-registration"),
                                 AntPathRequestMatcher.antMatcher("/"),
-                                AntPathRequestMatcher.antMatcher("/api/logout")
-                                ).authenticated().anyRequest().permitAll()
+                                AntPathRequestMatcher.antMatcher("/api/**")
+                        ).authenticated().anyRequest().permitAll()
                 ).oauth2Login(
                         oAuth2LoginConfigurer ->
                                 oAuth2LoginConfigurer
