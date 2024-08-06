@@ -5,13 +5,16 @@ public class SocialLoginResponse {
     private String email;
     private String accessToken;
     private String refreshToken;
+    private boolean isNewMember;
 
-    public SocialLoginResponse(String accessToken,
+    public SocialLoginResponse(String email,
+                               String accessToken,
                                String refreshToken,
-                               String email) {
+                               boolean isNewMember) {
+        this.email = email;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.email = email;
+        this.isNewMember = isNewMember;
     }
 
     public String getEmail() {
@@ -24,5 +27,9 @@ public class SocialLoginResponse {
 
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public boolean isNewMember() {
+        return isNewMember;
     }
 }

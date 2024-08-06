@@ -121,9 +121,12 @@ public class KakaoService {
         OAuth2UserInfo userInfo = getUserKakaoInfo(accessToken);
         MemberLoginResponse memberResponse = findBySocialId(userInfo.getId());
 
+        boolean isNewMember = false;
+
         if(memberResponse == null) {
             signUp(new SocialLoginRequest(userInfo.getEmail(), userInfo.getId()));
             memberResponse = findBySocialId(userInfo.getId());
+            isNewMember = true;
         }
 
         String jwtAccessToken = jwtService.createAccessToken(memberResponse.getEmail());
@@ -131,7 +134,7 @@ public class KakaoService {
 
         jwtService.updateRefreshToken(memberResponse.getEmail(), jwtRefreshToken);
 
-        return new SocialLoginResponse(jwtAccessToken, jwtRefreshToken, memberResponse.getEmail());
+        return new SocialLoginResponse(jwtAccessToken, jwtRefreshToken, memberResponse.getEmail(), isNewMember);
     }
 
     @Transactional
