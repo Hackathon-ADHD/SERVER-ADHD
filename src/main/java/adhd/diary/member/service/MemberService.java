@@ -76,6 +76,7 @@ public class MemberService {
         return new MemberLogoutResponse(member.getEmail(), member.getSocialProvider(), member.getSocialId(), member.getRefreshToken());
     }
 
+    @Transactional
     public void saveDiaries(Member member) {
         diaryRepository.save(new Diary(
                 "오늘 고등학교 친구들이랑 오랜만에 만나 술을 마셨는데, 옛날 얘기를 하느라 시간 가는줄 몰랐다. 너무 재밌었는데 시간이 너무 늦어 헤어져야해서 아쉬웠다.",

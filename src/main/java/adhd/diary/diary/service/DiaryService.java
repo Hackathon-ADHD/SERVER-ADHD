@@ -67,7 +67,7 @@ public class DiaryService {
     public List<DiaryDateResponse> findDatesByEmail() {
         Member member = memberRepository.findByEmail(getAuthenticationMemberEmail())
                 .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
-        List<Diary> diaries = diaryRepository.findByMemberId(member.getId())
+        List<Diary> diaries = diaryRepository.findByMemberIdOrderByDateDesc(member.getId())
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         return diaries.stream().map(DiaryDateResponse::new).toList();
     }
