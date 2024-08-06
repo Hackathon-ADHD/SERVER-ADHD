@@ -134,7 +134,7 @@ public class NaverService {
 
         jwtService.updateRefreshToken(memberResponse.getEmail(), jwtRefreshToken);
 
-        return new SocialLoginResponse(jwtAccessToken, jwtRefreshToken, memberResponse.getEmail(), isNewMember);
+        return new SocialLoginResponse(memberResponse.getEmail(), jwtAccessToken, jwtRefreshToken, isNewMember);
     }
 
     @Transactional
