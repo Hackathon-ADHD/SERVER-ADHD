@@ -45,7 +45,6 @@ public class DiaryService {
         Diary diary = request.toEntity();
         diary.setMember(member);
         diary = diaryRepository.save(diary);
-
         return new DiaryResponse(diary);
     }
 
