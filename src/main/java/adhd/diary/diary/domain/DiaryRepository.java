@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    Optional<List<Diary>> findByMemberId(Long memberId);
+
+    Optional<List<Diary>> findByMemberIdOrderByDateDesc(Long memberId);
 
     @Query(value = "SELECT * FROM diary d WHERE d.date = :targetDate", nativeQuery = true)
     Optional<Diary> findLastYearByDate(@Param("targetDate") LocalDate targetDate);
