@@ -1,6 +1,8 @@
 package adhd.diary.auth.jwt;
 
 import adhd.diary.auth.dto.response.TokenResponse;
+import adhd.diary.auth.exception.InvalidAuthorizationHeaderException;
+import adhd.diary.auth.exception.token.TokenInvalidException;
 import adhd.diary.auth.exception.token.TokenNotFoundException;
 import adhd.diary.member.domain.Member;
 import adhd.diary.member.domain.MemberRepository;
@@ -110,8 +112,12 @@ public class JwtService {
                     .verify(accessToken)
                     .getClaim(EMAIL_CLAIM)
                     .asString());
-        }catch (Exception e) {
+        } catch (TokenExpiredException e) {
             throw new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED);
+        } catch (JWTVerificationException e) {
+            throw new TokenInvalidException(ResponseCode.TOKEN_VALIDATION_FAILED);
+        } catch (Exception e) {
+            throw new TokenInvalidException(ResponseCode.UNEXPECTED_ERROR);
         }
     }
 
@@ -138,13 +144,12 @@ public class JwtService {
             verifier.verify(token);
             return true;
         } catch (TokenExpiredException e) {
-            System.err.println("토큰이 만료되었습니다: " + e.getMessage());
+            throw new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED);
         } catch (JWTVerificationException e) {
-            System.err.println("토큰 검증 실패: " + e.getMessage());
+            throw new TokenInvalidException(ResponseCode.TOKEN_VALIDATION_FAILED);
         } catch (Exception e) {
-            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
+            throw new TokenInvalidException(ResponseCode.UNEXPECTED_ERROR);
         }
-        throw new TokenNotFoundException(ResponseCode.JWT_ACCESS_TOKEN_EXPIRED);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -213,12 +218,12 @@ public class JwtService {
         return Optional.ofNullable(authorizationHeader)
                 .filter(header -> header.startsWith(BEARER))
                 .map(header -> header.replace(BEARER, ""))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Authorization header"));
+                .orElseThrow(() -> new InvalidAuthorizationHeaderException(ResponseCode.INVALID_AUTHORIZATION_HEADER));
     }
     public String extractRefreshTokenFromHeader(String authorizationHeader) {
         return Optional.ofNullable(authorizationHeader)
                 .filter(header -> header.startsWith(BEARER))
                 .map(header -> header.replace(BEARER, ""))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Authorization header"));
+                .orElseThrow(() -> new InvalidAuthorizationHeaderException(ResponseCode.INVALID_AUTHORIZATION_HEADER));
     }
 }

@@ -52,4 +52,15 @@ public class AuthExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
     }
+
+    @ExceptionHandler(InvalidAuthorizationHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAuthorizationHeaderException(InvalidAuthorizationHeaderException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getResponseCode().name(),
+                exception.getResponseCode().getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
+    }
 }
