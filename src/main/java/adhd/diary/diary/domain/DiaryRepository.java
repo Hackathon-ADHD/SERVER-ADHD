@@ -14,8 +14,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     Optional<List<Diary>> findByMemberIdOrderByDateDesc(Long memberId);
 
-    @Query(value = "SELECT * FROM diary d WHERE d.date = :targetDate", nativeQuery = true)
-    Optional<Diary> findLastYearByDate(@Param("targetDate") LocalDate targetDate);
+    @Query(value = "SELECT * FROM diary d WHERE d.member_id = :memberId AND d.date = :targetDate", nativeQuery = true)
+    Optional<Diary> findLastYearByDate(Long memberId, @Param("targetDate") LocalDate targetDate);
 
     @Query(value = "SELECT * FROM diary d WHERE d.member_id = :memberId AND d.date BETWEEN '2024-07-28' AND '2024-08-03'", nativeQuery = true)
     Optional<List<Diary>> findWeekeendByMemberId(Long memberId);
