@@ -74,7 +74,9 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public DiaryResponse findLastYearDiary(String date) {
-        Diary diary = diaryRepository.findLastYearByDate(convertLastDate(date))
+        Member member = memberRepository.findByEmail(getAuthenticationMemberEmail())
+                .orElseThrow(() -> new MemberNotFoundException(ResponseCode.MEMBER_NOT_FOUND));
+        Diary diary = diaryRepository.findLastYearByDate(member.getId(), convertLastDate(date))
                 .orElseThrow(() -> new DiaryNotFoundException(ResponseCode.DIARY_NOT_FOUND));
         authorizePostMember(diary);
         return new DiaryResponse(diary);
