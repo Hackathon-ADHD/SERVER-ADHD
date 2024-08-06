@@ -45,6 +45,9 @@ public enum ResponseCode {
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
     JWT_REFRESH_SUCCESS(HttpStatus.OK, "JWT 토큰 재발급 성공"),
 
+    INVALID_AUTHORIZATION_HEADER(HttpStatus.BAD_REQUEST, "유효하지 않은 Authorization 헤더입니다."),
+
+
     /**
      * OAuth2 Token retrieval errors
      */

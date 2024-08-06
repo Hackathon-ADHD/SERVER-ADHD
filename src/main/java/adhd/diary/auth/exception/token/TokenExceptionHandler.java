@@ -12,7 +12,18 @@ import java.time.LocalDateTime;
 public class TokenExceptionHandler {
 
     @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleMemberNotFoundException(TokenNotFoundException exception, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handelTokenNotFoundException(TokenNotFoundException exception, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                exception.getResponseCode().name(),
+                exception.getResponseCode().getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorResponse, exception.getResponseCode().getHttpStatus());
+    }
+
+    @ExceptionHandler(TokenInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleTokenInvalidException(TokenInvalidException exception, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 exception.getResponseCode().name(),
