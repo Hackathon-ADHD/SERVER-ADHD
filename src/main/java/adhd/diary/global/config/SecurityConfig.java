@@ -1,11 +1,8 @@
 package adhd.diary.global.config;
 
 import adhd.diary.auth.handler.JwtAuthenticationProcessingFilter;
-import adhd.diary.auth.handler.OAuth2LoginFailureHandler;
-import adhd.diary.auth.handler.OAuth2LoginSuccessHandler;
 import adhd.diary.auth.jwt.JwtBlacklistService;
 import adhd.diary.auth.jwt.JwtService;
-import adhd.diary.auth.service.CustomOAuth2UserService;
 import adhd.diary.member.domain.MemberRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,25 +24,16 @@ public class SecurityConfig {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final JwtBlacklistService jwtBlacklistService;
 
     public SecurityConfig(JwtService jwtService,
                           MemberRepository memberRepository,
-                          OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-                          OAuth2LoginFailureHandler oAuth2LoginFailureHandler,
-                          CustomOAuth2UserService customOAuth2UserService,
                           RedisTemplate<String, Object> redisTemplate,
                           JwtBlacklistService jwtBlacklistService) {
         this.jwtService = jwtService;
         this.memberRepository = memberRepository;
-        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
-        this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
-        this.customOAuth2UserService = customOAuth2UserService;
         this.redisTemplate = redisTemplate;
         this.jwtBlacklistService = jwtBlacklistService;
     }
@@ -90,17 +78,7 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/"),
                                 AntPathRequestMatcher.antMatcher("/api/**")
                         ).authenticated().anyRequest().permitAll()
-                ).oauth2Login(
-                        oAuth2LoginConfigurer ->
-                                oAuth2LoginConfigurer
-                                        .loginPage("/login")
-                                        .successHandler(oAuth2LoginSuccessHandler)
-                                        .failureHandler(oAuth2LoginFailureHandler)
-                                        .userInfoEndpoint(userInfoEndpointConfig ->
-                                                userInfoEndpointConfig.userService(customOAuth2UserService))
                 )
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutSuccessUrl("/login")
-                        .invalidateHttpSession(true))
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new UsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .build();
