@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginApiController {
 
     private final KakaoService kakaoService;
