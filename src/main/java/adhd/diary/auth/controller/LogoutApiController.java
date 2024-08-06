@@ -8,6 +8,8 @@ import adhd.diary.response.ApiResponse;
 import adhd.diary.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +34,9 @@ public class LogoutApiController {
 
     @PostMapping("/api/logout")
     @Operation(summary = "access token을 이용해 로그아웃", description = "액세스 토큰을 사용하여 사용자를 로그아웃 시키는 API")
-    public ApiResponse<?> logout(Principal principal, @RequestHeader("Authorization") String authorizationHeader) {
+    public ApiResponse<?> logout(Principal principal, HttpServletRequest request, HttpServletResponse response) {
         logger.info("로그아웃 요청 받음");
+        String authorizationHeader = request.getHeader("Authorization");
 
         String accessToken = jwtService.extractAccessTokenFromHeader(authorizationHeader);
 
