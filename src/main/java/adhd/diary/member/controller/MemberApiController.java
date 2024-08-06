@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
+@RequestMapping("/api")
 public class MemberApiController {
 
     private final MemberService memberService;
@@ -21,7 +22,7 @@ public class MemberApiController {
         this.memberService = memberService;
     }
 
-    @PutMapping("/api/update-nickname")
+    @PutMapping("/update-nickname")
     @Operation(summary = "사용자 닉네임 수정", description = "사용자가 닉네임을 수정하기 위해 사용하는 API")
     public ApiResponse<?> updateNickname(@RequestBody UpdateNicknameRequest updateNicknameRequest, Principal principal) {
 
